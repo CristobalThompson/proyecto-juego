@@ -29,7 +29,7 @@ public class PantallaJuego implements Screen {
 	private Nave4 nave;
 	private  ArrayList<Ball2> balls1 = new ArrayList<>();
 	private  ArrayList<Ball2> balls2 = new ArrayList<>();
-	private  ArrayList<Bullet> balas = new ArrayList<>();
+	private  ArrayList<Disparo> balas = new ArrayList<>();
 
 
 	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,
@@ -89,7 +89,7 @@ public class PantallaJuego implements Screen {
         if (!nave.estaHerido()) {
             // colisiones entre balas y asteroides y su destruccion
             for (int i = 0; i < balas.size(); i++) {
-                Bullet b = balas.get(i);
+                Disparo b = balas.get(i);
                 b.update(dt);
                 for (int j = 0; j < balls1.size(); j++) {
                     if (b.checkCollision(balls1.get(j))) {
@@ -123,7 +123,7 @@ public class PantallaJuego implements Screen {
             }
         }
 	      //dibujar balas
-	     for (Bullet b : balas) {
+	     for (Disparo b : balas) {
 	          b.draw(batch);
 	      }
 	      nave.draw(batch, this);
@@ -160,7 +160,7 @@ public class PantallaJuego implements Screen {
 
 	}
 
-    public boolean agregarBala(Bullet bb) {
+    public boolean agregarBala(Disparo bb) {
     	return balas.add(bb);
     }
 
@@ -201,4 +201,7 @@ public class PantallaJuego implements Screen {
 		this.gameMusic.dispose();
 	}
 
+    public ArrayList<Ball2> getMeteoritos(){
+        return balls1;
+    }
 }
