@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
-public class Bullet {
+public class Bullet implements Disparo{
 
 	private float xSpeed;
 	private float ySpeed;
@@ -19,6 +19,7 @@ public class Bullet {
 	        this.xSpeed = xSpeed;
 	        this.ySpeed = ySpeed;
 	    }
+        @Override
 	    public void update(float dt) {
             spr.translate(xSpeed * dt, ySpeed * dt);
 
@@ -32,10 +33,12 @@ public class Bullet {
 
 	    }
 
+        @Override
 	    public void draw(SpriteBatch batch) {
 	    	spr.draw(batch);
 	    }
 
+        @Override
 	    public boolean checkCollision(Ball2 b2) {
 	        if(spr.getBoundingRectangle().overlaps(b2.getArea())){
 	        	// Se destruyen ambos
@@ -46,6 +49,7 @@ public class Bullet {
 	        return false;
 	    }
 
+        @Override
 	    public boolean isDestroyed() {return destroyed;}
 
 }
