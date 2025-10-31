@@ -58,7 +58,7 @@ public class PantallaJuego implements Screen {
 	    				Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
 	    				new Texture(Gdx.files.internal("Rocket2.png")),
 	    				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
-        nave.setVidas(vidas);
+        //nave.setVidas(vidas);
         //crear asteroides
         Random r = new Random();
 	    for (int i = 0; i < cantAsteroides; i++) {
@@ -140,7 +140,7 @@ public class PantallaJuego implements Screen {
               }
   	        }
 
-	      if (nave.estaDestruido()) {
+	      if (nave.isDestruido()) {
   			if (score > game.getHighScore())
   				game.setHighScore(score);
 	    	Screen ss = new PantallaGameOver(game);
