@@ -106,11 +106,9 @@ public class Nave4 extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-          //Bullet  bala = new Bullet(bx,by,0f,480f,txBala);
-          //DoubleBullet bala = new DoubleBullet(bx, by,480f, txBala);
-          GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
-	      juego.agregarBala(bala);
-	      soundBala.play();
+            GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
+	        juego.agregarBala(bala);
+	        soundBala.play();
         }
 
     }

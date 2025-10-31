@@ -31,8 +31,8 @@ public class Carguero extends NaveAbs{
 
         spr = new Sprite(tx);
         spr.setPosition(x, y);
-        //spr.setOriginCenter();
         spr.setBounds(x, y, 90, 90);
+        spr.setOriginCenter();
     }
 
     @Override
@@ -85,17 +85,31 @@ public class Carguero extends NaveAbs{
             spr.setPosition(nx, ny);
             //spr.draw(batch);
 
-            if (cargasEscudo > 0){
-                spr.draw(batch);
-                batch.setColor(0.5f, 0.8f, 1f, 0.35f);
-                spr.setScale(1.10f);
-                spr.draw(batch);
-                spr.setScale(1f);
-                batch.setColor(1f, 1f, 1f, 1f);
+            if (cargasEscudo > 0) {
+                // copiar el transform actual para que quede perfectamente centrado
+                Sprite halo = new Sprite(spr);
+                halo.setOriginCenter();                 // por si acaso
+
+                // color del halo (turquesa) y un poco translúcido
+                halo.setColor(0.1f, 0.9f, 0.9f, 0.35f);
+                halo.setScale(1.45f);                   // más grande para “aura”
+
+                // (opcional) brillo aditivo solo para el halo
+                int oldSrc = batch.getBlendSrcFunc();
+                int oldDst = batch.getBlendDstFunc();
+                batch.setBlendFunction(
+                    com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA,
+                    com.badlogic.gdx.graphics.GL20.GL_ONE
+                );
+                halo.draw(batch);
+                batch.setBlendFunction(oldSrc, oldDst);
             }
-            else{
-                spr.draw(batch);
-            }
+
+            // --- Sprite base, sin tinte azul ---
+            spr.setColor(1f, 1f, 1f, 1f);   // asegurar color blanco
+            spr.setScale(1f);               // escala normal
+            spr.draw(batch);
+
 
         } else {
             float x0 = spr.getX();
@@ -112,9 +126,7 @@ public class Carguero extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-            //Bullet  bala = new Bullet(bx,by,0f,480f,txBala);
             DoubleBullet bala = new DoubleBullet(bx, by,480f, txBala);
-            //GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
             juego.agregarBala(bala);
             soundBala.play();
         }
@@ -137,12 +149,7 @@ public class Carguero extends NaveAbs{
             if (b.getySpeed() ==0) b.setySpeed(b.getySpeed() + (int)yVel/2);
             yVel = - yVel;
             b.setySpeed(- b.getySpeed());
-            // despegar sprites
-      /*      int cont = 0;
-            while (b.getArea().overlaps(spr.getBoundingRectangle()) && cont<xVel) {
-               spr.setX(spr.getX()+Math.signum(xVel));
-            }   */
-            //actualizar vidas y herir
+
 
             if (cargasEscudo > 0){
                 cargasEscudo--;
@@ -156,6 +163,7 @@ public class Carguero extends NaveAbs{
             herido = true;
             tiempoHerido=tiempoHeridoMax;
             sonidoHerido.play();
+            cargasEscudo = cargasEscudoMax;
             return true;
         }
         return false;
