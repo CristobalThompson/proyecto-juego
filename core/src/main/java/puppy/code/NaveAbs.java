@@ -1,5 +1,7 @@
 package puppy.code;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 public abstract class NaveAbs{
     private boolean destruida = false;
     private int vidas;
@@ -23,6 +25,12 @@ public abstract class NaveAbs{
 
     //metodo abstracto de armamento de las naves
     public abstract void armamento();
+
+    public abstract boolean estaHerido();
+
+    public abstract void draw(SpriteBatch batch, PantallaJuego juego);
+
+    public abstract boolean checkCollision(Ball2 b);
 
     //METODOS de interacción con los datos.
     public void herir(){
@@ -63,10 +71,6 @@ public abstract class NaveAbs{
     // getters
 
     public boolean isDestruido(){
-        return destruida;
-    }
-
-    public boolean isDestruida(){
         return destruida;
     }
 

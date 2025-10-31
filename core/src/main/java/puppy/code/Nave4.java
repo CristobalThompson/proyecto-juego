@@ -47,6 +47,7 @@ public class Nave4 extends NaveAbs{
 
     }
 
+    @Override
     public void draw(SpriteBatch batch, PantallaJuego juego){
 
         float dt = Math.min(Gdx.graphics.getDeltaTime(), 1f/60f);
@@ -114,6 +115,7 @@ public class Nave4 extends NaveAbs{
 
     }
 
+    @Override
     public boolean checkCollision(Ball2 b) {
         //encapsulación pendiente
         float xVel = getVelX();
@@ -145,7 +147,7 @@ public class Nave4 extends NaveAbs{
         return false;
     }
 
-    //public boolean estaDestruido() {return !herido && destruida;}
+    @Override
     public boolean estaHerido() {
  	   return herido;
     }
