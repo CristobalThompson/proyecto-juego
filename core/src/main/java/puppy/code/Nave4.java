@@ -21,7 +21,9 @@ public class Nave4 extends NaveAbs{
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
 
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    private static Nave4 instance;
+
+    private Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
         super(3,0f,0f,1800f,360f,3f);
     	sonidoHerido = soundChoque;
     	this.soundBala = soundBala;
@@ -34,17 +36,14 @@ public class Nave4 extends NaveAbs{
 
     }
 
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala, float aceleracion,
-                 float velocidadMax, float rozamiento){
-        super(3,0f,0f,aceleracion,velocidadMax,rozamiento);
-        sonidoHerido = soundChoque;
-        this.soundBala = soundBala;
-        this.txBala = txBala;
-
-        spr = new Sprite(tx);
-        spr.setPosition(x, y);
-        spr.setBounds(x, y, 45, 45);
-
+    public static Nave4 getNave4(){
+        if (instance == null) {
+            instance = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+                new Texture(Gdx.files.internal("Rocket2.png")),
+                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
+        }
+        return instance;
     }
 
     @Override
