@@ -10,16 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 
 
-public class Nave4 {
-
-	private boolean destruida = false;
-    private int vidas = 3;
-    private float xVel = 0f;
-    private float yVel = 0f;
-    private float aceleracion = 1800f;
-    private float velocidadMax = 360f;
-    private float rozamiento = 3f;
-
+public class Nave4 extends NaveAbs{
 
     private Sprite spr;
     private Sound sonidoHerido;
@@ -31,6 +22,7 @@ public class Nave4 {
     private int tiempoHerido;
 
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+        super(3,0f,0f,1800f,360f,3f);
     	sonidoHerido = soundChoque;
     	this.soundBala = soundBala;
     	this.txBala = txBala;
@@ -44,6 +36,7 @@ public class Nave4 {
 
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala, float aceleracion,
                  float velocidadMax, float rozamiento){
+        super(3,0f,0f,aceleracion,velocidadMax,rozamiento);
         sonidoHerido = soundChoque;
         this.soundBala = soundBala;
         this.txBala = txBala;
@@ -51,10 +44,6 @@ public class Nave4 {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
         spr.setBounds(x, y, 45, 45);
-
-        this.aceleracion = aceleracion;
-        this.velocidadMax = velocidadMax;
-        this.rozamiento = rozamiento;
 
     }
 
@@ -78,21 +67,17 @@ public class Nave4 {
             if (ix != 0f || iy != 0f) {
                 float len = (float)Math.sqrt(ix*ix + iy*iy);
                 ix /= len; iy /= len;
-                xVel += ix * aceleracion * dt;
-                yVel += iy * aceleracion * dt;
+                acelerarX(ix,dt);
+                acelerarY(iy,dt);
             } else {
-                float f = Math.max(0f, 1f - rozamiento * dt);
-                xVel *= f;
-                yVel *= f;
-                if (Math.abs(xVel) < 1f) xVel = 0f;
-                if (Math.abs(yVel) < 1f) yVel = 0f;
+                aplicarRozamiento(dt);
             }
 
-            float speed = (float)Math.sqrt(xVel*xVel + yVel*yVel);
-            if (speed > velocidadMax) {
-                float esc = velocidadMax / speed;
-                xVel *= esc; yVel *= esc;
-            }
+            limitarVelocidad();
+
+            //encapsulación pendiente
+            float xVel = getVelX();
+            float yVel = getVelY();
 
             float nx = x + xVel * dt;
             float ny = y + yVel * dt;
@@ -130,6 +115,10 @@ public class Nave4 {
     }
 
     public boolean checkCollision(Ball2 b) {
+        //encapsulación pendiente
+        float xVel = getVelX();
+        float yVel = getVelY();
+
         if(!herido && b.getArea().overlaps(spr.getBoundingRectangle())){
         	// rebote
             if (xVel ==0) xVel += b.getXSpeed()/2;
@@ -147,27 +136,24 @@ public class Nave4 {
                spr.setX(spr.getX()+Math.signum(xVel));
             }   */
         	//actualizar vidas y herir
-            vidas--;
+            herir();
             herido = true;
   		    tiempoHerido=tiempoHeridoMax;
   		    sonidoHerido.play();
-            if (vidas<=0)
-          	    destruida = true;
             return true;
         }
         return false;
     }
 
-    public boolean estaDestruido() {
-       return !herido && destruida;
-    }
+    //public boolean estaDestruido() {return !herido && destruida;}
     public boolean estaHerido() {
  	   return herido;
     }
-
-    public int getVidas() {return vidas;}
-    //public boolean isDestruida() {return destruida;}
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
-	public void setVidas(int vidas2) {vidas = vidas2;}
+
+    public void armamento(){
+        //pendiente
+    }
+
 }
