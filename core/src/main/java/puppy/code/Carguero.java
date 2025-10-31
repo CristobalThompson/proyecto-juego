@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-
-
-public class Nave4 extends NaveAbs{
-
+public class Carguero extends NaveAbs{
     private Sprite spr;
     private Sound sonidoHerido;
     private Sound soundBala;
@@ -21,34 +18,30 @@ public class Nave4 extends NaveAbs{
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
 
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
-        super(3,0f,0f,1800f,360f,3f);
-    	sonidoHerido = soundChoque;
-    	this.soundBala = soundBala;
-    	this.txBala = txBala;
+    //escudo
+    private int cargasEscudo = 2;     // absorbe 2 golpes antes de dañar vidas
+    private final int cargasEscudoMax = 2;
 
-    	spr = new Sprite(tx);
-    	spr.setPosition(x, y);
-    	//spr.setOriginCenter();
-    	spr.setBounds(x, y, 45, 45);
 
-    }
-
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala, float aceleracion,
-                 float velocidadMax, float rozamiento){
-        super(3,0f,0f,aceleracion,velocidadMax,rozamiento);
+    public Carguero(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+        super(5, 0f, 0f, 900f, 180, 6f);
         sonidoHerido = soundChoque;
         this.soundBala = soundBala;
         this.txBala = txBala;
 
         spr = new Sprite(tx);
         spr.setPosition(x, y);
-        spr.setBounds(x, y, 45, 45);
-
+        //spr.setOriginCenter();
+        spr.setBounds(x, y, 90, 90);
     }
 
     @Override
-    public void draw(SpriteBatch batch, PantallaJuego juego){
+    public boolean estaHerido() {
+        return herido;
+    }
+
+    @Override
+    public void draw(SpriteBatch batch, PantallaJuego juego) {
 
         float dt = Math.min(Gdx.graphics.getDeltaTime(), 1f/60f);
 
@@ -58,7 +51,7 @@ public class Nave4 extends NaveAbs{
             float w = Gdx.graphics.getWidth();
             float h = Gdx.graphics.getHeight();
 
-	        // que se mueva con teclado
+            // que se mueva con teclado
             float ix = 0f, iy = 0f;
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  ix -= 1f;
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) ix += 1f;
@@ -90,7 +83,20 @@ public class Nave4 extends NaveAbs{
 
 
             spr.setPosition(nx, ny);
-            spr.draw(batch);
+            //spr.draw(batch);
+
+            if (cargasEscudo > 0){
+                spr.draw(batch);
+                batch.setColor(0.5f, 0.8f, 1f, 0.35f);
+                spr.setScale(1.10f);
+                spr.draw(batch);
+                spr.setScale(1f);
+                batch.setColor(1f, 1f, 1f, 1f);
+            }
+            else{
+                spr.draw(batch);
+            }
+
         } else {
             float x0 = spr.getX();
             spr.setX(x0 + MathUtils.random(-2f, 2f));
@@ -106,13 +112,12 @@ public class Nave4 extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-          //Bullet  bala = new Bullet(bx,by,0f,480f,txBala);
-          //DoubleBullet bala = new DoubleBullet(bx, by,480f, txBala);
-          GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
-	      juego.agregarBala(bala);
-	      soundBala.play();
+            //Bullet  bala = new Bullet(bx,by,0f,480f,txBala);
+            DoubleBullet bala = new DoubleBullet(bx, by,480f, txBala);
+            //GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
+            juego.agregarBala(bala);
+            soundBala.play();
         }
-
     }
 
     @Override
@@ -122,7 +127,7 @@ public class Nave4 extends NaveAbs{
         float yVel = getVelY();
 
         if(!herido && b.getArea().overlaps(spr.getBoundingRectangle())){
-        	// rebote
+            // rebote
             if (xVel ==0) xVel += b.getXSpeed()/2;
             if (b.getXSpeed() ==0) b.setXSpeed(b.getXSpeed() + (int)xVel/2);
             xVel = - xVel;
@@ -137,32 +142,31 @@ public class Nave4 extends NaveAbs{
             while (b.getArea().overlaps(spr.getBoundingRectangle()) && cont<xVel) {
                spr.setX(spr.getX()+Math.signum(xVel));
             }   */
-        	//actualizar vidas y herir
+            //actualizar vidas y herir
+
+            if (cargasEscudo > 0){
+                cargasEscudo--;
+                herido = true;
+                tiempoHerido = tiempoHeridoMax;
+                sonidoHerido.play();
+                return true;
+            }
+
             herir();
             herido = true;
-  		    tiempoHerido=tiempoHeridoMax;
-  		    sonidoHerido.play();
+            tiempoHerido=tiempoHeridoMax;
+            sonidoHerido.play();
             return true;
         }
         return false;
     }
 
-    //public boolean estaDestruido() {return !herido && destruida;}
     @Override
-    public boolean estaHerido() {
- 	   return herido;
-    }
-    public int getX() {return (int) spr.getX();}
-    public int getY() {return (int) spr.getY();}
+    public void armamento() {
 
-    @Override
-    public void armamento(){
-        //pendiente
     }
-
     @Override
     public CharSequence descripcion(){
-        return "Vidas: " + getVidas();
+        return "Vidas: "+ getVidas()+ " Escudos: " + cargasEscudo;
     }
-
 }
