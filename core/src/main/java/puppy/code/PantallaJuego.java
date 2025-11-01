@@ -1,6 +1,6 @@
 package puppy.code;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
@@ -30,9 +30,11 @@ public class PantallaJuego implements Screen {
 	private int cantAsteroides;
 
 	private NaveAbs nave;
-	private  ArrayList<Ball2> balls1 = new ArrayList<>();
-	private  ArrayList<Ball2> balls2 = new ArrayList<>();
-	private  ArrayList<Disparo> balas = new ArrayList<>();
+	/*private  ArrayList<Ball2> balls1 = new ArrayList<>();
+	private  ArrayList<Ball2> balls2 = new ArrayList<>();*/
+    private final List<Ball2> meteoritos = new ArrayList<>();
+    private final List<Disparo> balas     = new ArrayList<>();
+	//private  List<Disparo> balas = new ArrayList<>();
 
 
 	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,
@@ -60,16 +62,18 @@ public class PantallaJuego implements Screen {
 	    else nave = getCarguero(); // cargar imagen del carguero, 64x64
 
         //nave.setVidas(vidas);
-        //crear asteroides
         Random r = new Random();
-	    for (int i = 0; i < cantAsteroides; i++) {
-	        Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
-	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
-	  	            20+r.nextInt(10), velXAsteroides+r.nextInt(4), velYAsteroides+r.nextInt(4),
-	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));
-	  	    balls1.add(bb);
-	  	    balls2.add(bb);
-	  	}
+        for (int i = 0; i < cantAsteroides; i++) {
+            Ball2 bb = new Ball2(
+                r.nextInt((int)Gdx.graphics.getWidth()),
+                50 + r.nextInt((int)Gdx.graphics.getHeight() - 50),
+                20 + r.nextInt(10),
+                velXAsteroides + r.nextInt(4),
+                velYAsteroides + r.nextInt(4),
+                new Texture(Gdx.files.internal("aGreyMedium4.png"))
+            );
+            meteoritos.add(bb);
+        }
 	}
 
 	public void dibujaEncabezado() {
@@ -80,7 +84,86 @@ public class PantallaJuego implements Screen {
 		game.getFont().draw(batch, "Score:"+this.score, Gdx.graphics.getWidth()-150, 30);
 		game.getFont().draw(batch, "HighScore:"+game.getHighScore(), Gdx.graphics.getWidth()/2-100, 30);
 	}
-	@Override
+
+    @Override
+    public void render(float delta) {
+        float dt = Math.min(delta, 1f/60f);
+
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        batch.begin();
+        dibujaEncabezado();
+
+        if (!nave.estaHerido()) {
+            // 3.1 Balas: update, colisión con meteoritos y borrado seguro
+            for (Iterator<Disparo> itB = balas.iterator(); itB.hasNext();) {
+                Disparo b = itB.next();
+                b.update(dt);
+
+                for (Iterator<Ball2> itM = meteoritos.iterator(); itM.hasNext();) {
+                    Ball2 m = itM.next();
+                    if (b.checkCollision(m)) {
+                        explosionSound.play();
+                        itM.remove();     // ← borra meteorito de forma segura
+                        score += 10;
+                    }
+                }
+
+                if (b.isDestroyed()) itB.remove(); // ← borra bala de forma segura
+            }
+
+            // 3.2 Meteoritos: mover
+            for (Ball2 m : meteoritos) m.update(dt);
+
+            // 3.3 Colisiones meteorito–meteorito (una sola lista, j = i+1)
+            for (int i = 0; i < meteoritos.size(); i++) {
+                Ball2 a = meteoritos.get(i);
+                for (int j = i + 1; j < meteoritos.size(); j++) {
+                    Ball2 b = meteoritos.get(j);
+                    a.checkCollision(b);
+                }
+            }
+        }
+
+        // 3.4 Dibujar balas
+        for (Disparo b : balas) b.draw(batch);
+
+        // 3.5 Dibujar nave
+        nave.draw(batch, this);
+
+        // 3.6 Dibujar meteoritos + choque con nave (borrado seguro)
+        for (Iterator<Ball2> itM = meteoritos.iterator(); itM.hasNext();) {
+            Ball2 m = itM.next();
+            m.draw(batch);
+            if (nave.checkCollision(m)) {
+                itM.remove(); // ← quitar si golpea a la nave
+            }
+        }
+
+        // 3.7 Fin de juego
+        if (nave.isDestruido()) {
+            if (score > game.getHighScore()) game.setHighScore(score);
+            Screen ss = new PantallaGameOver(game);
+            ss.resize(1200, 800);
+            game.setScreen(ss);
+            dispose();
+        }
+
+        batch.end();
+
+        // 3.8 Nivel completado
+        if (meteoritos.isEmpty()) {
+            Screen ss = new PantallaJuego(
+                game, ronda + 1, nave.getVidas(), score,
+                velXAsteroides + 3, velYAsteroides + 3, cantAsteroides + 10
+            );
+            ss.resize(1200, 800);
+            game.setScreen(ss);
+            dispose();
+        }
+    }
+
+
+    /*@Override
 	public void render(float delta) {
 
         float dt = Math.min(delta, 1f/60f);
@@ -160,7 +243,7 @@ public class PantallaJuego implements Screen {
 			dispose();
 		  }
 
-	}
+	}*/
 
     public boolean agregarBala(Disparo bb) {
     	return balas.add(bb);
@@ -203,7 +286,8 @@ public class PantallaJuego implements Screen {
 		this.gameMusic.dispose();
 	}
 
-    public ArrayList<Ball2> getMeteoritos(){
-        return balls1;
+    public List<Ball2> getMeteoritos(){
+        //return balls1;
+        return Collections.unmodifiableList(meteoritos);
     }
 }

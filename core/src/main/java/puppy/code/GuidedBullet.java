@@ -7,12 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.*;
 
 import java.util.ArrayList;
 
 public class GuidedBullet implements Disparo{
     private final Sprite spr;
-    private final ArrayList<Ball2> objetivos;
+    private final List<Ball2> objetivos;
     private final float speed;
     private final float steer;
     private float homingLeft;
@@ -21,7 +22,7 @@ public class GuidedBullet implements Disparo{
     private boolean destroyed = false;
 
     public GuidedBullet(float x, float y, float speed, float homingSeconds, float steerStrength,
-                        Texture tx, ArrayList<Ball2> objetivos) {
+                        Texture tx, List<Ball2> objetivos) {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
 
