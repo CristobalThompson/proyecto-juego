@@ -18,6 +18,10 @@ import static puppy.code.Nave4.getNave4;
 
 public class PantallaJuego implements Screen {
 
+    private boolean gameOver = false;
+    private boolean switching = false;
+    private float startGrace = 0.25f;
+
 	private SpaceNavigation game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
@@ -56,8 +60,14 @@ public class PantallaJuego implements Screen {
 		gameMusic.setVolume(0.5f);
 		gameMusic.play();
 
-        if (ronda < 3) nave = getNave4(); // cargar imagen de la nave, 64x64
-	    else nave = getCarguero(); // cargar imagen del carguero, 64x64
+        if (ronda < 3) {
+            nave = getNave4(); // cargar imagen de la nave, 64x64
+            nave.restaurar();
+        }
+	    else {
+            nave = getCarguero(); // cargar imagen del carguero, 64x64
+            nave.restaurar();
+        }
 
         //nave.setVidas(vidas);
         //crear asteroides

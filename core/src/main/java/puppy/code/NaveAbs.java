@@ -44,6 +44,8 @@ public abstract class NaveAbs{
         destruida = true;
     }
 
+    public void restaurar(){ destruida = false;}
+
     public void acelerarX(float inicioX, float dtiempo){
         this.xVel += inicioX * aceleracion * dtiempo;
     }
