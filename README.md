@@ -1,33 +1,32 @@
-# SpaceNav2024
+# Star Rebels
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+Contexto: Nos adentramos en el universo de Star Wars. Eres un piloto rebelde en
+una guerra galáctica contra un Imperio opresor. Tu misión es hostigar sus rutas,
+destruir sus escuadrones y agotar sus recursos. En cada sector enfrentarás oleadas
+de cazas imperiales, torretas y obstáculos espaciales.
+Jugabilidad: El jugador se encuentra en la parte inferior de la pantalla y las 
+naves comenzarán a atacar desde la parte superior. El jugador tiene movilidad por
+la pantalla para esquivar las naves, obstáculos y disparos. A su vez disparará 
+como el sistema shoot 'em up.
+Objetivo: Destruir todos los objetivos enemigos.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+# Mecánicas y controles
 
-## Platforms
+Movimiento: Flechas (← ↑ → ↓)
+Disparo: Barra espaciadora
+Objetivo: destruir enemigos/meteoritos, evitar impactos, subir el score.
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+# ejecutar programa
 
-## Gradle
+## Intellij IDEA
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+- colocar sdk 17 de microsoft
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+- establecer lenguage level = 11
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+## Eclipse
+- importar proyecto.
+- seleccionar la carpeta dep proyecto (SpaceNav2024) debe exportarlo como proyexto de gradle
+- el proyecto requiere java skd 17 pero utiliza el 11.
+
+recomendación: utilizar intellij idea.
