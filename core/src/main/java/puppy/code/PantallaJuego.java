@@ -12,9 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import static puppy.code.Carguero.getCarguero;
-import static puppy.code.Nave4.getNave4;
-
 
 public class PantallaJuego implements Screen {
 
@@ -61,12 +58,16 @@ public class PantallaJuego implements Screen {
 		gameMusic.play();
 
         if (ronda < 3) {
-            nave = getNave4(); // cargar imagen de la nave, 64x64
-            nave.restaurar();
+            nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+                new Texture(Gdx.files.internal("Rocket2.png")),
+                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 	    else {
-            nave = getCarguero(); // cargar imagen del carguero, 64x64
-            nave.restaurar();
+            nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+                new Texture(Gdx.files.internal("Rocket2.png")),
+                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
         //nave.setVidas(vidas);
