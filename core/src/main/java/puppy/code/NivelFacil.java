@@ -13,8 +13,8 @@ public class NivelFacil extends Nivel {
     @Override
     public void generarEnemigos() {
         int cantAsteroides = 5;
-        int velX = 2;
-        int velY = 2;
+        int velX = 100;
+        int velY = 100;
 
         Random r = new Random();
         for (int i = 0; i < cantAsteroides; i++) {

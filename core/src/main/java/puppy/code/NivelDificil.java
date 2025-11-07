@@ -14,9 +14,9 @@ public class NivelDificil extends Nivel{
     @Override
     public void generarEnemigos() {
         // Configuración MEDIA: Más rápidos, más cantidad
-        int cantAsteroides = 15;
-        int velX = 5;
-        int velY = 5;
+        int cantAsteroides = 30;
+        int velX = 400;
+        int velY = 400;
 
         Random r = new Random();
         for (int i = 0; i < cantAsteroides; i++) {

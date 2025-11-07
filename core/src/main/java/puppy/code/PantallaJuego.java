@@ -39,9 +39,7 @@ public class PantallaJuego implements Screen {
 		batch = game.getBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 640);
-		//inicializar assets; musica de fondo y efectos de sonido
-		//explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-		//explosionSound.setVolume(1,0.1f);
+
 		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
 
 		gameMusic.setLooping(true);
@@ -61,19 +59,39 @@ public class PantallaJuego implements Screen {
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
-        //nave.setVidas(vidas);
         Random r = new Random();
 	    initLevel(ronda);
 	}
 
     private void initLevel(int ronda){
-        if (ronda <= 2) {
+        Random r = new Random();
+        int prob = r.nextInt(100);
+
+        int chanceFacil, chanceMedio;
+
+        if (ronda <= 3) {
+            // Rondas iniciales: Mayor probabilidad de fácil
+            chanceFacil = 70; // 70% Fácil
+            chanceMedio = 95; // 25% Medio (95 - 70), 5% Difícil (resto)
+        } else if (ronda <= 6) {
+            // Rondas medias: Mayor probabilidad de medio
+            chanceFacil = 30; // 30% Fácil
+            chanceMedio = 80; // 50% Medio, 20% Difícil
+        } else {
+            // Rondas avanzadas: Mayor probabilidad de difícil
+            chanceFacil = 10; // 10% Fácil
+            chanceMedio = 40; // 30% Medio, 60% Difícil
+        }
+
+        // Selección basada en el número aleatorio
+        if (prob < chanceFacil) {
             nivelActual = new NivelFacil();
-        } else if (ronda <= 5) {
+        } else if (prob < chanceMedio) {
             nivelActual = new NivelMedio();
         } else {
             nivelActual = new NivelDificil();
         }
+
         nivelActual.generarEnemigos();
     }
 
@@ -95,10 +113,7 @@ public class PantallaJuego implements Screen {
         dibujaEncabezado();
         if (!nave.estaHerido()) {
             nivelActual.update(dt, score);
-
-            if (nivelActual.checkNaveCollision(nave)){
-
-            }
+            nivelActual.checkNaveCollision(nave);
         }
 
         nivelActual.draw(batch);

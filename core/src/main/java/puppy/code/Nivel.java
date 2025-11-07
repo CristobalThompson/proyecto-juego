@@ -78,9 +78,6 @@ public abstract class Nivel {
         return asteroides.isEmpty();
     }
 
-    public int getPuntosGanadosEnFrame() {
-        return 0;
-    }
 
     public void dispose() {
         explosionSound.dispose();

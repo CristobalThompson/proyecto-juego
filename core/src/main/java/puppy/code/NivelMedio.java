@@ -13,8 +13,8 @@ public class NivelMedio extends Nivel{
     @Override
     public void generarEnemigos() {
         int cantAsteroides = 15;
-        int velX = 5;
-        int velY = 5;
+        int velX = 200;
+        int velY = 200;
 
         Random r = new Random();
         for (int i = 0; i < cantAsteroides; i++) {
