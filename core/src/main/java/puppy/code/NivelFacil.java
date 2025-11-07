@@ -11,7 +11,7 @@ public class NivelFacil extends Nivel {
     }
 
     @Override
-    public void generarEnemigos() {
+    public void generarEnemigos(NaveAbs jugador) {
         int cantAsteroides = 5;
         int velX = 100;
         int velY = 100;
@@ -28,5 +28,10 @@ public class NivelFacil extends Nivel {
             );
             addBB(bb);
         }
+
+        Texture textEnemigo = new Texture("MainShip3.png");
+
+        agregarNave(new CazaTIE(textEnemigo, 200, 700, 3, this, jugador));
+        agregarNave(new CazaTIE(textEnemigo, 600, 700, 3, this, jugador));
     }
 }

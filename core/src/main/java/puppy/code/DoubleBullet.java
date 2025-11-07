@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 
 public class DoubleBullet implements Disparo{
 
@@ -49,7 +50,21 @@ public class DoubleBullet implements Disparo{
     }
 
     @Override
+    public boolean checkCollision(Rectangle area) {
+        boolean hit = false;
+        hit |= balaDer.checkCollision(area);
+        hit |= balaIzq.checkCollision(area);
+        return hit;
+    }
+
+    @Override
     public boolean isDestroyed() {
         return balaDer.isDestroyed() && balaIzq.isDestroyed();
+    }
+
+    @Override
+    public void setDestroyed(boolean condicion) {
+        balaDer.setDestroyed(condicion);
+        balaIzq.setDestroyed(condicion);
     }
 }

@@ -69,11 +69,11 @@ public class PantallaJuego implements Screen {
 
         nave.setVidas(vidas);
 
-        Random r = new Random();
-	    initLevel(ronda);
+        //Random r = new Random();
+	    initLevel(ronda, nave);
 	}
 
-    private void initLevel(int ronda){
+    private void initLevel(int ronda, NaveAbs nave){
         Random r = new Random();
         int prob = r.nextInt(100);
 
@@ -101,7 +101,7 @@ public class PantallaJuego implements Screen {
             nivelActual = new NivelDificil();
         }
 
-        nivelActual.generarEnemigos();
+        nivelActual.generarEnemigos(nave);
     }
 
 	public void dibujaEncabezado() {
@@ -121,7 +121,7 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
         if (!nave.estaHerido()) {
-            score += nivelActual.update(dt);
+            score += nivelActual.update(dt, nave);
             nivelActual.checkNaveCollision(nave);
         }
 

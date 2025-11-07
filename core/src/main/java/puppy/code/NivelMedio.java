@@ -11,10 +11,10 @@ public class NivelMedio extends Nivel{
     }
 
     @Override
-    public void generarEnemigos() {
-        int cantAsteroides = 15;
-        int velX = 200;
-        int velY = 200;
+    public void generarEnemigos(NaveAbs jugador) {
+        int cantAsteroides = 7;
+        int velX = 150;
+        int velY = 150;
 
         Random r = new Random();
         for (int i = 0; i < cantAsteroides; i++) {
@@ -28,5 +28,10 @@ public class NivelMedio extends Nivel{
             );
             addBB(bb);
         }
+        Texture textEnemigo = new Texture("MainShip3.png");
+
+        agregarNave(new CazaTIE(textEnemigo, 200, 700, 5, this, jugador));
+        agregarNave(new CazaTIE(textEnemigo, 600, 700, 5, this, jugador));
+
     }
 }

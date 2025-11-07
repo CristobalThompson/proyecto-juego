@@ -12,11 +12,11 @@ public class NivelDificil extends Nivel{
     }
 
     @Override
-    public void generarEnemigos() {
+    public void generarEnemigos(NaveAbs jugador) {
         // Configuración MEDIA: Más rápidos, más cantidad
-        int cantAsteroides = 30;
-        int velX = 400;
-        int velY = 400;
+        int cantAsteroides = 10;
+        int velX = 200;
+        int velY = 200;
 
         Random r = new Random();
         for (int i = 0; i < cantAsteroides; i++) {
@@ -30,5 +30,11 @@ public class NivelDificil extends Nivel{
             );
             addBB(bb);
         }
+
+        Texture textEnemigo = new Texture("MainShip3.png");
+
+        agregarNave(new CazaTIE(textEnemigo, 200, 700, 5, this, jugador));
+        agregarNave(new CazaTIE(textEnemigo, 600, 700, 5, this, jugador));
+        agregarNave(new CazaTIE(textEnemigo, 350, 700, 5, this, jugador));
     }
 }

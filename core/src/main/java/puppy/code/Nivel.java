@@ -1,5 +1,6 @@
 package puppy.code;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
@@ -9,32 +10,57 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public abstract class Nivel {
     private ArrayList<Ball2> asteroides = new ArrayList<>();
+    private ArrayList<CazaTIE> navesEnemigas = new ArrayList<>();
+
     private ArrayList<Disparo> balas = new ArrayList<>();
+    private ArrayList<Disparo> balasEnemigas = new ArrayList<>();
     private Sound explosionSound;
 
     public Nivel(){
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
     }
 
-    public abstract void generarEnemigos();
+    public abstract void generarEnemigos(NaveAbs jugador);
 
-    public int update(float dt){
+    public int update(float dt, NaveAbs jugador){
         int puntosGanados = 0;
+
         for (int i = 0; i < balas.size(); i++) {
             Disparo b = balas.get(i);
             b.update(dt);
+
+
+            for (int j = 0; j < navesEnemigas.size(); j++) {
+                CazaTIE enemigo = navesEnemigas.get(j);
+                if (b.checkCollision(enemigo.getArea())) {
+                    enemigo.recibirImpacto();
+                    b.setDestroyed(true);
+
+                    if (enemigo.estaDestruida()) {
+                        navesEnemigas.remove(j);
+                        j--;
+                        puntosGanados += 100;
+                        explosionSound.play();
+                    }
+                }
+            }
+
             for (int j = 0; j < asteroides.size(); j++) {
                 if (b.checkCollision(asteroides.get(j))) {
                     explosionSound.play();
                     asteroides.remove(j);
                     j--;
-                    puntosGanados += 100;
+                    puntosGanados += 10;
                 }
             }
             if (b.isDestroyed()) {
                 balas.remove(b);
                 i--;
             }
+        }
+
+        for(CazaTIE enemigo : navesEnemigas){
+            enemigo.update(dt);
         }
 
         for (Ball2 ball : asteroides) {
@@ -58,6 +84,12 @@ public abstract class Nivel {
         for (Ball2 b : asteroides) {
             b.draw(batch);
         }
+        for (CazaTIE n : navesEnemigas){
+            n.draw(batch);
+        }
+        for (Disparo b : balasEnemigas){
+            b.draw(batch);
+        }
     }
 
     public boolean checkNaveCollision(NaveAbs nave) {
@@ -77,6 +109,10 @@ public abstract class Nivel {
         return balas.add(d);
     }
 
+    public boolean agregarBalaEnemiga(Disparo d){
+        return balasEnemigas.add(d);
+    }
+
     public boolean isCompleted() {
         return asteroides.isEmpty();
     }
@@ -88,6 +124,10 @@ public abstract class Nivel {
 
     public void addBB(Ball2 bb){
         asteroides.add(bb);
+    }
+
+    public void agregarNave(CazaTIE nave){
+        navesEnemigas.add(nave);
     }
 
     public ArrayList<Ball2> getEnemigos() {

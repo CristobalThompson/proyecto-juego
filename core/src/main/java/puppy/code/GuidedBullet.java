@@ -101,8 +101,27 @@ public class GuidedBullet implements Disparo{
     }
 
     @Override
+    public boolean checkCollision(Rectangle area) {
+        if (destroyed) return false;
+
+        Rectangle a = spr.getBoundingRectangle();
+
+        if (a.overlaps(area)) {
+            destroyed = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean isDestroyed() {
         return destroyed;
+    }
+
+    @Override
+    public void setDestroyed(boolean condicion) {
+        destroyed = condicion;
     }
 
     private Ball2 buscarMasCercano(){
