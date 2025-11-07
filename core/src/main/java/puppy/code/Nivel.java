@@ -18,7 +18,8 @@ public abstract class Nivel {
 
     public abstract void generarEnemigos();
 
-    public void update(float dt, int score){
+    public int update(float dt){
+        int puntosGanados = 0;
         for (int i = 0; i < balas.size(); i++) {
             Disparo b = balas.get(i);
             b.update(dt);
@@ -27,6 +28,7 @@ public abstract class Nivel {
                     explosionSound.play();
                     asteroides.remove(j);
                     j--;
+                    puntosGanados += 100;
                 }
             }
             if (b.isDestroyed()) {
@@ -46,6 +48,7 @@ public abstract class Nivel {
                 ball1.checkCollision(ball2);
             }
         }
+        return puntosGanados;
     }
 
     public void draw(SpriteBatch batch){

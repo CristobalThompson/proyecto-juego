@@ -26,15 +26,20 @@ public class PantallaJuego implements Screen {
 	private Music gameMusic;
 	private int score;
 	private int ronda;
+    private ArrayList<Integer> naveDesbloqueadas;
+    private int naveSeleccionada;
 
 	private NaveAbs nave;
 	private Nivel nivelActual;
 
 
-	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score) {
+	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score, ArrayList<Integer> navesDesbloqueadas,
+                         int naveSeleccionada) {
 		this.game = game;
 		this.ronda = ronda;
 		this.score = score;
+        this.naveDesbloqueadas = navesDesbloqueadas;
+        this.naveSeleccionada = naveSeleccionada;
 
 		batch = game.getBatch();
 		camera = new OrthographicCamera();
@@ -46,18 +51,23 @@ public class PantallaJuego implements Screen {
 		gameMusic.setVolume(0.5f);
 		gameMusic.play();
 
-        if (ronda < 3) {
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1200, 800);
+
+        if (naveSeleccionada == 1) {
             nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
-	    else {
+	    else if (naveSeleccionada == 2){
             nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
+
+        nave.setVidas(vidas);
 
         Random r = new Random();
 	    initLevel(ronda);
@@ -111,7 +121,7 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
         if (!nave.estaHerido()) {
-            nivelActual.update(dt, score);
+            score += nivelActual.update(dt);
             nivelActual.checkNaveCollision(nave);
         }
 
@@ -130,9 +140,9 @@ public class PantallaJuego implements Screen {
 	      batch.end();
 	      //nivel completado
 	      if (nivelActual.isCompleted()) {
-			Screen ss = new PantallaJuego(game,ronda+1, nave.getVidas(), score);
-			ss.resize(1200, 800);
-			game.setScreen(ss);
+              Screen tienda = new PantallaTienda(game, ronda, nave.getVidas(), score,
+                  naveDesbloqueadas, naveSeleccionada);
+			game.setScreen(tienda);
 			dispose();
 		  }
 	}
