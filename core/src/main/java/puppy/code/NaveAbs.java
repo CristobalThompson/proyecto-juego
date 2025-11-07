@@ -115,4 +115,8 @@ public abstract class NaveAbs{
     public void setyVel(float nuevaV){
         this.yVel = nuevaV;
     }
+
+    public void setVidas(int vidas){
+        this.vidas = vidas;
+    }
 }

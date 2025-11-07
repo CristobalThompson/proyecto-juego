@@ -26,7 +26,7 @@ Objetivo: destruir enemigos/meteoritos, evitar impactos, subir el score.
 
 ## Eclipse
 - importar proyecto.
-- seleccionar la carpeta dep proyecto (SpaceNav2024) debe exportarlo como proyexto de gradle
+- seleccionar la carpeta del proyecto (SpaceNav2024) debe exportarlo como proyecto de gradle
 - el proyecto requiere java skd 17 pero utiliza el 11.
 
 recomendación: utilizar intellij idea.

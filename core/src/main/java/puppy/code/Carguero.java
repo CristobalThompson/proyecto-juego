@@ -22,10 +22,7 @@ public class Carguero extends NaveAbs{
     private int cargasEscudo = 2;     // absorbe 2 golpes antes de dañar vidas
     private final int cargasEscudoMax = 2;
 
-    private static Carguero instance;
-
-
-    private Carguero(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    public Carguero(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
         super(5, 0f, 0f, 900f, 180, 6f);
         sonidoHerido = soundChoque;
         this.soundBala = soundBala;
@@ -35,16 +32,6 @@ public class Carguero extends NaveAbs{
         spr.setPosition(x, y);
         spr.setBounds(x, y, 90, 90);
         spr.setOriginCenter();
-    }
-
-    public static Carguero getCarguero(){
-        if (instance == null){
-            instance = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
-                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
-                new Texture(Gdx.files.internal("Rocket2.png")),
-                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
-        }
-        return instance;
     }
 
     @Override

@@ -12,9 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import static puppy.code.Carguero.getCarguero;
-import static puppy.code.Nave4.getNave4;
-
 
 public class PantallaJuego implements Screen {
 
@@ -29,58 +26,83 @@ public class PantallaJuego implements Screen {
 	private Music gameMusic;
 	private int score;
 	private int ronda;
-	private int velXAsteroides;
-	private int velYAsteroides;
-	private int cantAsteroides;
+    private ArrayList<Integer> naveDesbloqueadas;
+    private int naveSeleccionada;
 
 	private NaveAbs nave;
-	private  ArrayList<Ball2> balls1 = new ArrayList<>();
-	private  ArrayList<Ball2> balls2 = new ArrayList<>();
-	private  ArrayList<Disparo> balas = new ArrayList<>();
+	private Nivel nivelActual;
 
 
-	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,
-			int velXAsteroides, int velYAsteroides, int cantAsteroides) {
+	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score, ArrayList<Integer> navesDesbloqueadas,
+                         int naveSeleccionada) {
 		this.game = game;
 		this.ronda = ronda;
 		this.score = score;
-		this.velXAsteroides = velXAsteroides;
-		this.velYAsteroides = velYAsteroides;
-		this.cantAsteroides = cantAsteroides;
+        this.naveDesbloqueadas = navesDesbloqueadas;
+        this.naveSeleccionada = naveSeleccionada;
 
 		batch = game.getBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 640);
-		//inicializar assets; musica de fondo y efectos de sonido
-		explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-		explosionSound.setVolume(1,0.1f);
+
 		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
 
 		gameMusic.setLooping(true);
 		gameMusic.setVolume(0.5f);
 		gameMusic.play();
 
-        if (ronda < 3) {
-            nave = getNave4(); // cargar imagen de la nave, 64x64
-            nave.restaurar();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1200, 800);
+
+        if (naveSeleccionada == 1) {
+            nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+                new Texture(Gdx.files.internal("Rocket2.png")),
+                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
-	    else {
-            nave = getCarguero(); // cargar imagen del carguero, 64x64
-            nave.restaurar();
+	    else if (naveSeleccionada == 2){
+            nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
+                new Texture(Gdx.files.internal("Rocket2.png")),
+                Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
-        //nave.setVidas(vidas);
-        //crear asteroides
+        nave.setVidas(vidas);
+
         Random r = new Random();
-	    for (int i = 0; i < cantAsteroides; i++) {
-	        Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
-	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
-	  	            20+r.nextInt(10), velXAsteroides+r.nextInt(4), velYAsteroides+r.nextInt(4),
-	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));
-	  	    balls1.add(bb);
-	  	    balls2.add(bb);
-	  	}
+	    initLevel(ronda);
 	}
+
+    private void initLevel(int ronda){
+        Random r = new Random();
+        int prob = r.nextInt(100);
+
+        int chanceFacil, chanceMedio;
+
+        if (ronda <= 3) {
+            //Rondas iniciales: Mayor probabilidad de fácil
+            chanceFacil = 70; // 70% Fácil
+            chanceMedio = 95; // 25% Medio (95 - 70), 5% Difícil (resto)
+        } else if (ronda <= 6) {
+            //  medias: Mayor probabilidad de medio
+            chanceFacil = 30; // 30% Fácil
+            chanceMedio = 80; // 50% Medio, 20% Difícil
+        } else {
+            //Rondas avanzadas: Mayor probabilidad de difícil
+            chanceFacil = 10; // 10% Fácil
+            chanceMedio = 40; // 30% Medio, 60% Difícil
+        }
+
+        if (prob < chanceFacil) {
+            nivelActual = new NivelFacil();
+        } else if (prob < chanceMedio) {
+            nivelActual = new NivelMedio();
+        } else {
+            nivelActual = new NivelDificil();
+        }
+
+        nivelActual.generarEnemigos();
+    }
 
 	public void dibujaEncabezado() {
         CharSequence str = nave.descripcion();
@@ -99,58 +121,13 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
         if (!nave.estaHerido()) {
-            // colisiones entre balas y asteroides y su destruccion
-            for (int i = 0; i < balas.size(); i++) {
-                Disparo b = balas.get(i);
-                b.update(dt);
-                for (int j = 0; j < balls1.size(); j++) {
-                    if (b.checkCollision(balls1.get(j))) {
-                        explosionSound.play();
-                        balls1.remove(j);
-                        balls2.remove(j);
-                        j--;
-                        score +=10;
-		              }
-		  	        }
-
-                //   b.draw(batch);
-                if (b.isDestroyed()) {
-                    balas.remove(b);
-                    i--; //para no saltarse 1 tras eliminar del arraylist
-                }
-            }
-            //actualizar movimiento de asteroides dentro del area
-            for (Ball2 ball : balls1) {
-                ball.update(dt);
-            }
-            //colisiones entre asteroides y sus rebotes
-            for (int i=0;i<balls1.size();i++) {
-                Ball2 ball1 = balls1.get(i);
-		        for (int j=0;j<balls2.size();j++) {
-                    Ball2 ball2 = balls2.get(j);
-		            if (i<j) {
-                        ball1.checkCollision(ball2);
-		            }
-		        }
-            }
+            score += nivelActual.update(dt);
+            nivelActual.checkNaveCollision(nave);
         }
-	      //dibujar balas
-	     for (Disparo b : balas) {
-	          b.draw(batch);
-	      }
-	      nave.draw(batch, this);
-	      //dibujar asteroides y manejar colision con nave
-	      for (int i = 0; i < balls1.size(); i++) {
-	    	    Ball2 b=balls1.get(i);
-	    	    b.draw(batch);
-		          //perdió vida o game over
-	              if (nave.checkCollision(b)) {
-		            //asteroide se destruye con el choque
-	            	 balls1.remove(i);
-	            	 balls2.remove(i);
-	            	 i--;
-              }
-  	        }
+
+        nivelActual.draw(batch);
+        nave.draw(batch, this);
+
 
 	      if (nave.isDestruido()) {
   			if (score > game.getHighScore())
@@ -162,18 +139,23 @@ public class PantallaJuego implements Screen {
   		  }
 	      batch.end();
 	      //nivel completado
-	      if (balls1.size()==0) {
-			Screen ss = new PantallaJuego(game,ronda+1, nave.getVidas(), score,
-					velXAsteroides+3, velYAsteroides+3, cantAsteroides+10);
-			ss.resize(1200, 800);
-			game.setScreen(ss);
+	      if (nivelActual.isCompleted()) {
+              Screen tienda = new PantallaTienda(game, ronda, nave.getVidas(), score,
+                  naveDesbloqueadas, naveSeleccionada);
+			game.setScreen(tienda);
 			dispose();
 		  }
-
 	}
 
     public boolean agregarBala(Disparo bb) {
-    	return balas.add(bb);
+    	return nivelActual.agregarBala(bb);
+    }
+
+    public ArrayList<Ball2> getMeteoritos(){
+        if (nivelActual != null) {
+            return nivelActual.getEnemigos();
+        }
+        return new ArrayList<>();
     }
 
 	@Override
@@ -209,11 +191,9 @@ public class PantallaJuego implements Screen {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		this.explosionSound.dispose();
 		this.gameMusic.dispose();
+        if (nivelActual != null){
+            nivelActual.dispose();
+        }
 	}
-
-    public ArrayList<Ball2> getMeteoritos(){
-        return balls1;
-    }
 }

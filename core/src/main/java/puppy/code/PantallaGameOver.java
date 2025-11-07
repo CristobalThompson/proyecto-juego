@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.ArrayList;
+
 
 public class PantallaGameOver implements Screen {
 
@@ -33,7 +35,7 @@ public class PantallaGameOver implements Screen {
 		game.getBatch().end();
 
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			Screen ss = new PantallaJuego(game,1,3,0,150,150,10);
+			Screen ss = new PantallaJuego(game,1,3,0, new ArrayList<Integer>(), 1);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();
