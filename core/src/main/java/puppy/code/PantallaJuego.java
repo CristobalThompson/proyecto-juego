@@ -70,20 +70,19 @@ public class PantallaJuego implements Screen {
         int chanceFacil, chanceMedio;
 
         if (ronda <= 3) {
-            // Rondas iniciales: Mayor probabilidad de fácil
+            //Rondas iniciales: Mayor probabilidad de fácil
             chanceFacil = 70; // 70% Fácil
             chanceMedio = 95; // 25% Medio (95 - 70), 5% Difícil (resto)
         } else if (ronda <= 6) {
-            // Rondas medias: Mayor probabilidad de medio
+            //  medias: Mayor probabilidad de medio
             chanceFacil = 30; // 30% Fácil
             chanceMedio = 80; // 50% Medio, 20% Difícil
         } else {
-            // Rondas avanzadas: Mayor probabilidad de difícil
+            //Rondas avanzadas: Mayor probabilidad de difícil
             chanceFacil = 10; // 10% Fácil
             chanceMedio = 40; // 30% Medio, 60% Difícil
         }
 
-        // Selección basada en el número aleatorio
         if (prob < chanceFacil) {
             nivelActual = new NivelFacil();
         } else if (prob < chanceMedio) {
