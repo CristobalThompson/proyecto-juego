@@ -5,14 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
 public class GuidedBullet implements Disparo{
+
     private final Sprite spr;
     private final ArrayList<Ball2> objetivos;
+    private final ArrayList<CazaTIE> naves;
     private final float speed;
     private final float steer;
     private float homingLeft;
@@ -21,7 +22,7 @@ public class GuidedBullet implements Disparo{
     private boolean destroyed = false;
 
     public GuidedBullet(float x, float y, float speed, float homingSeconds, float steerStrength,
-                        Texture tx, ArrayList<Ball2> objetivos) {
+                        Texture tx, ArrayList<Ball2> objetivos, ArrayList<CazaTIE> enemigos) {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
 
@@ -29,6 +30,7 @@ public class GuidedBullet implements Disparo{
         this.homingLeft = homingSeconds;
         this.steer = steerStrength;
         this.objetivos = objetivos;
+        naves = enemigos;
 
         vx = 0f;
         vy = speed;
@@ -40,12 +42,11 @@ public class GuidedBullet implements Disparo{
         if (destroyed) return;
 
         if (homingLeft > 0f){
-            Ball2 target = buscarMasCercano();
-            if (target != null){
+            Rectangle tb = buscarMasCercano();
+            if (tb != null){
                 float bx = spr.getX() + spr.getWidth() * 0.5f;
                 float by = spr.getY() + spr.getHeight() * 0.5f;
 
-                Rectangle tb = target.getArea();
                 float tx = tb.x + tb.width * 0.5f;
                 float ty = tb.y + tb.height * 0.5f;
 
@@ -101,12 +102,31 @@ public class GuidedBullet implements Disparo{
     }
 
     @Override
+    public boolean checkCollision(Rectangle area) {
+        if (destroyed) return false;
+
+        Rectangle a = spr.getBoundingRectangle();
+
+        if (a.overlaps(area)) {
+            destroyed = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
     public boolean isDestroyed() {
         return destroyed;
     }
 
-    private Ball2 buscarMasCercano(){
-        if (objetivos == null || objetivos.size() == 0) return null;
+    @Override
+    public void setDestroyed(boolean condicion) {
+        destroyed = condicion;
+    }
+
+    private Rectangle buscarMasCercano(){
+        /*if (objetivos == null || objetivos.size() == 0) return null;
 
         float bx = spr.getX() + spr.getWidth() * 0.5f;
         float by = spr.getY() + spr.getHeight() * 0.5f;
@@ -126,6 +146,55 @@ public class GuidedBullet implements Disparo{
                 best = m;
             }
         }
-        return best;
+        return best;*/
+
+        float bx = spr.getX() + spr.getWidth() * 0.5f;
+        float by = spr.getY() + spr.getHeight() * 0.5f;
+
+        Rectangle bestRect = null;
+        float bestD2 = Float.MAX_VALUE;
+
+        // Bucle 1: Revisar Asteroides (objetivos)
+        if (objetivos != null) {
+            for (int i = 0; i < objetivos.size(); i++){
+                Ball2 m = objetivos.get(i);
+                Rectangle r = m.getArea();
+
+                float cx = r.x + r.width * 0.5f;
+                float cy = r.y + r.height * 0.5f;
+                float dx = cx - bx, dy = cy - by;
+                float d2 = dx * dx + dy * dy;
+
+                if (d2 < bestD2){
+                    bestD2 = d2;
+                    bestRect = r;
+                }
+            }
+        }
+
+        // Bucle 2: Revisar Naves Enemigas (naves)
+        if (naves != null) {
+            for (int i = 0; i < naves.size(); i++) {
+                CazaTIE n = naves.get(i);
+                Rectangle r = n.getArea(); // Asumiendo que CazaTIE tiene getArea()
+
+                float cx = r.x + r.width * 0.5f;
+                float cy = r.y + r.height * 0.5f;
+                float dx = cx - bx, dy = cy - by;
+                float d2 = dx * dx + dy * dy;
+
+                if (d2 < bestD2) {
+                    bestD2 = d2;
+                    bestRect = r;
+                }
+            }
+        }
+
+        return bestRect;
+    }
+
+    @Override
+    public Rectangle getArea() {
+        return spr.getBoundingRectangle();
     }
 }

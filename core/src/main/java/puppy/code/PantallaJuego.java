@@ -69,11 +69,11 @@ public class PantallaJuego implements Screen {
 
         nave.setVidas(vidas);
 
-        Random r = new Random();
-	    initLevel(ronda);
+        //Random r = new Random();
+	    initLevel(ronda, nave);
 	}
 
-    private void initLevel(int ronda){
+    private void initLevel(int ronda, NaveAbs nave){
         Random r = new Random();
         int prob = r.nextInt(100);
 
@@ -101,7 +101,7 @@ public class PantallaJuego implements Screen {
             nivelActual = new NivelDificil();
         }
 
-        nivelActual.generarEnemigos();
+        nivelActual.generarEnemigos(nave);
     }
 
 	public void dibujaEncabezado() {
@@ -121,7 +121,7 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
         if (!nave.estaHerido()) {
-            score += nivelActual.update(dt);
+            score += nivelActual.update(dt, nave);
             nivelActual.checkNaveCollision(nave);
         }
 
@@ -129,7 +129,7 @@ public class PantallaJuego implements Screen {
         nave.draw(batch, this);
 
 
-	      if (nave.isDestruido()) {
+	      if (nave.isDestruido() || nivelActual.isJugadorDerrotado()) {
   			if (score > game.getHighScore())
   				game.setHighScore(score);
 	    	Screen ss = new PantallaGameOver(game);
@@ -154,6 +154,13 @@ public class PantallaJuego implements Screen {
     public ArrayList<Ball2> getMeteoritos(){
         if (nivelActual != null) {
             return nivelActual.getEnemigos();
+        }
+        return new ArrayList<>();
+    }
+
+    public ArrayList<CazaTIE> getEnemigos(){
+        if (nivelActual != null){
+            return nivelActual.getNaves();
         }
         return new ArrayList<>();
     }
