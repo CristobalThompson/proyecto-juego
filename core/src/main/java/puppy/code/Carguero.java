@@ -169,6 +169,35 @@ public class Carguero extends NaveAbs{
     }
 
     @Override
+    public boolean checkCollision(Disparo b){
+        if (!herido && b.getArea().overlaps(spr.getBoundingRectangle())) {
+
+            // --- NO HAY LÓGICA DE REBOTE ---
+            // Las balas no hacen rebotar a la nave.
+
+            // Lógica de escudo (copiada de Ball2)
+            if (cargasEscudo > 0){
+                cargasEscudo--;
+                herido = true;
+                tiempoHerido = tiempoHeridoMax;
+                sonidoHerido.play();
+                return true; // Devuelve true para que Nivel sepa que la bala golpeó
+            }
+
+            // Lógica de daño (copiada de Ball2)
+            herir();
+            herido = true;
+            tiempoHerido=tiempoHeridoMax;
+            sonidoHerido.play();
+            cargasEscudo = cargasEscudoMax;
+            return true; // Devuelve true para que Nivel sepa que la bala golpeó
+        }
+
+        // No hubo colisión
+        return false;
+    }
+
+    @Override
     public void armamento() {
 
     }

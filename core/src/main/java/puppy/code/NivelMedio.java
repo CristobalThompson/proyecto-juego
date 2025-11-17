@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class NivelMedio extends Nivel{
 
     public NivelMedio(){
-        super();
+        super(1.5f, 18, 4, 45f);
     }
 
     @Override
@@ -28,10 +28,20 @@ public class NivelMedio extends Nivel{
             );
             addBB(bb);
         }
-        Texture textEnemigo = new Texture("MainShip3.png");
+    }
 
-        agregarNave(new CazaTIE(textEnemigo, 200, 700, 5, this, jugador));
-        agregarNave(new CazaTIE(textEnemigo, 600, 700, 5, this, jugador));
+    @Override
+    public void spawnCazaTIE(NaveAbs jugador, Texture tx){
+        Random rand = new Random();
+        int anchoNave = tx.getWidth();
 
+        int margen = 50;
+
+        int rangoX = Gdx.graphics.getWidth() - (margen * 2) - anchoNave;
+
+        float x = rand.nextInt(rangoX) + margen;
+        float y = Gdx.graphics.getHeight() - 50; // Cerca del borde superior
+
+        agregarNave(new CazaTIE(tx, x, y, getVidasCaza(), this, jugador, getYSpeedCaza()));
     }
 }

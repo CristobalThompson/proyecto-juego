@@ -32,6 +32,8 @@ public abstract class NaveAbs{
 
     public abstract boolean checkCollision(Ball2 b);
 
+    public abstract boolean checkCollision(Disparo b);
+
     public abstract CharSequence descripcion();
 
     //METODOS de interacción con los datos.

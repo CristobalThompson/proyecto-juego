@@ -9,6 +9,7 @@ public class CazaTIE {
     private Sprite spr;
     private int vidas;
 
+    private float ySpeed;
     private float moveTimer;
     private float moveDirection = 1f;
     private float speed = 100f;
@@ -19,12 +20,13 @@ public class CazaTIE {
     private Nivel nivel;
     private NaveAbs jugador;
 
-    public CazaTIE(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador){
+    public CazaTIE(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador, float ySpeed){
         this.spr = new Sprite(tx);
         this.spr.setPosition(x, y);
         this.vidas = vidas;
         this.nivel = nivel;
         this.jugador = jugador;
+        this.ySpeed = ySpeed;
 
         this.shootCooldown = (float) (Math.random() * 3.0 + 1.0);
     }
@@ -34,10 +36,12 @@ public class CazaTIE {
         moveTimer += dt;
 
         //IA de movimiento cada 2 segunditos
-        if (moveTimer > 2.0f){
+        if (moveTimer > 3.0f){
             moveDirection *= -1;
             moveTimer = 0;
         }
+
+        spr.translateY(-ySpeed * dt); // 'y' negativa es hacia abajo
 
         //IA de disparo
         shootTimer += dt;

@@ -16,4 +16,6 @@ public interface Disparo {
     public abstract boolean isDestroyed();
 
     public abstract void setDestroyed(boolean condicion);
+
+    public abstract Rectangle getArea();
 }

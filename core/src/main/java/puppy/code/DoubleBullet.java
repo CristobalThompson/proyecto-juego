@@ -67,4 +67,9 @@ public class DoubleBullet implements Disparo{
         balaDer.setDestroyed(condicion);
         balaIzq.setDestroyed(condicion);
     }
+
+    @Override
+    public Rectangle getArea() {
+        return balaDer.getArea();
+    }
 }

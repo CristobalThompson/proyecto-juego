@@ -8,7 +8,7 @@ import java.util.Random;
 public class NivelDificil extends Nivel{
 
     public NivelDificil(){
-        super();
+        super(1.0f, 25, 5, 60f);
     }
 
     @Override
@@ -30,11 +30,20 @@ public class NivelDificil extends Nivel{
             );
             addBB(bb);
         }
+    }
 
-        Texture textEnemigo = new Texture("MainShip3.png");
+    @Override
+    public void spawnCazaTIE(NaveAbs jugador, Texture tx){
+        Random rand = new Random();
+        int anchoNave = tx.getWidth();
 
-        agregarNave(new CazaTIE(textEnemigo, 200, 700, 5, this, jugador));
-        agregarNave(new CazaTIE(textEnemigo, 600, 700, 5, this, jugador));
-        agregarNave(new CazaTIE(textEnemigo, 350, 700, 5, this, jugador));
+        int margen = 50;
+
+        int rangoX = Gdx.graphics.getWidth() - (margen * 2) - anchoNave;
+
+        float x = rand.nextInt(rangoX) + margen;
+        float y = Gdx.graphics.getHeight() - 50; // Cerca del borde superior
+
+        agregarNave(new CazaTIE(tx, x, y, getVidasCaza(), this, jugador, getYSpeedCaza()));
     }
 }

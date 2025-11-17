@@ -94,7 +94,8 @@ public class Nave4 extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-            GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala, juego.getMeteoritos());
+            GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala,
+                juego.getMeteoritos(), juego.getEnemigos());
 	        juego.agregarBala(bala);
 	        soundBala.play();
         }
@@ -118,18 +119,26 @@ public class Nave4 extends NaveAbs{
             if (b.getySpeed() ==0) b.setySpeed(b.getySpeed() + (int)yVel/2);
             yVel = - yVel;
             b.setySpeed(- b.getySpeed());
-            // despegar sprites
-      /*      int cont = 0;
-            while (b.getArea().overlaps(spr.getBoundingRectangle()) && cont<xVel) {
-               spr.setX(spr.getX()+Math.signum(xVel));
-            }   */
-        	//actualizar vidas y herir
             herir();
             herido = true;
   		    tiempoHerido=tiempoHeridoMax;
   		    sonidoHerido.play();
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean checkCollision(Disparo b){
+        if (!herido && b.getArea().overlaps(spr.getBoundingRectangle())) {
+            herir();
+            herido = true;
+            tiempoHerido = tiempoHeridoMax;
+            sonidoHerido.play();
+
+            return true;
+        }
+
         return false;
     }
 
