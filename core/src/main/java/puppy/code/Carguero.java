@@ -205,4 +205,10 @@ public class Carguero extends NaveAbs{
     public CharSequence descripcion(){
         return "Vidas: "+ getVidas()+ " Escudos: " + cargasEscudo;
     }
+
+    @Override
+    public float getX(){ return spr.getX();}
+
+    @Override
+    public float getY(){ return spr.getY(); }
 }

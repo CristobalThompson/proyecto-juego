@@ -7,25 +7,24 @@ import java.util.Random;
 
 public class NivelDificil extends Nivel{
 
+    private boolean intentoBossRealizado = false;
+    private boolean jefeSpawneado = false;
+
     public NivelDificil(){
         super(1.0f, 25, 5, 60f);
     }
 
     @Override
-    public void generarEnemigos(NaveAbs jugador) {
-        // Configuración MEDIA: Más rápidos, más cantidad
-        int cantAsteroides = 10;
-        int velX = 200;
-        int velY = 200;
-
-        Random r = new Random();
+    public void crearAsteroidesIniciales(Random rand){
+        // Obstáculos específicos de DIFÍCIL (Más asteroides, más rápidos)
+        int cantAsteroides = 12;
         for (int i = 0; i < cantAsteroides; i++) {
             Ball2 bb = new Ball2(
-                r.nextInt((int) Gdx.graphics.getWidth()),
-                50 + r.nextInt((int)Gdx.graphics.getHeight() - 50),
-                20 + r.nextInt(10),
-                velX + r.nextInt(4),
-                velY + r.nextInt(4),
+                rand.nextInt(Gdx.graphics.getWidth()),
+                150 + rand.nextInt(Gdx.graphics.getHeight() - 200),
+                20 + rand.nextInt(10),
+                200 + rand.nextInt(50), // Más rápidos
+                200 + rand.nextInt(50),
                 new Texture(Gdx.files.internal("aGreyMedium4.png"))
             );
             addBB(bb);
@@ -33,17 +32,49 @@ public class NivelDificil extends Nivel{
     }
 
     @Override
-    public void spawnCazaTIE(NaveAbs jugador, Texture tx){
-        Random rand = new Random();
-        int anchoNave = tx.getWidth();
+    public void solicitarSpawnEnemigo(NaveAbs jugador){
 
+        Texture tex = getTexturaCaza();
         int margen = 50;
+        int anchoTotal = getAnchoPantalla();
 
-        int rangoX = Gdx.graphics.getWidth() - (margen * 2) - anchoNave;
+        float x1 = margen + getRandom().nextInt((anchoTotal / 2) - 100);
+        float y = getAltoPantalla() - 50;
 
-        float x = rand.nextInt(rangoX) + margen;
-        float y = Gdx.graphics.getHeight() - 50; // Cerca del borde superior
+        float x2 = (anchoTotal / 2) + getRandom().nextInt(anchoTotal / 2 - 100 - margen);
 
-        agregarNave(new CazaTIE(tx, x, y, getVidasCaza(), this, jugador, getYSpeedCaza()));
+        CazaTIE n1 = new CazaTIE(tex, x1, y, getVidasCaza(), this, jugador, getSpeedConfig());
+        CazaTIE n2 = new CazaTIE(tex, x2, y, getVidasCaza(), this, jugador, getSpeedConfig());
+
+        agregarNave(n1);
+        agregarNave(n2);
+    }
+
+    @Override
+    public boolean Evento(){
+        if (jefeSpawneado) return false;
+
+        if (!intentoBossRealizado && getNavesGeneradas() >= 25){
+            intentoBossRealizado = true;
+
+            Random r = getRandom();
+            if (r.nextInt(100) < 40){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void EventoEspecial(NaveAbs jugador){
+        System.out.println("Jefesito en camino pe");
+
+        Texture txCrucero = new Texture("MainShip3.png");
+
+        CruceroEstelar jefe = new CruceroEstelar(txCrucero, getAnchoPantalla()/2 - 100, getAltoPantalla() - 100, 20,
+                                                this, jugador, 10f);
+        agregarNave(jefe);
+        jefeSpawneado = true;
     }
 }

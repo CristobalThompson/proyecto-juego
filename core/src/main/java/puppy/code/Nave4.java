@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.util.Random;
 
 
 public class Nave4 extends NaveAbs{
@@ -20,6 +21,8 @@ public class Nave4 extends NaveAbs{
     private boolean herido = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
+
+    Random r = new Random();
 
 
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
@@ -94,9 +97,18 @@ public class Nave4 extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-            GuidedBullet bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala,
-                juego.getMeteoritos(), juego.getEnemigos());
-	        juego.agregarBala(bala);
+            int prob = r.nextInt() % 100;
+
+            Disparo bala = null;
+
+            if (prob <= 25 && prob > 0){
+                bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala,
+                    juego.getMeteoritos(), juego.getEnemigos());
+            }
+            else{
+                bala = new Bullet(bx, by, 0f, 320f, txBala);
+            }
+            juego.agregarBala(bala);
 	        soundBala.play();
         }
 
@@ -147,8 +159,6 @@ public class Nave4 extends NaveAbs{
     public boolean estaHerido() {
  	   return herido;
     }
-    public int getX() {return (int) spr.getX();}
-    public int getY() {return (int) spr.getY();}
 
     @Override
     public void armamento(){
@@ -159,5 +169,11 @@ public class Nave4 extends NaveAbs{
     public CharSequence descripcion(){
         return "Vidas: " + getVidas();
     }
+
+    @Override
+    public float getX(){ return spr.getX();}
+
+    @Override
+    public float getY(){ return spr.getY(); }
 
 }

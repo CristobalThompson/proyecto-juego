@@ -104,6 +104,9 @@ public abstract class NaveAbs{
         return rozamiento;
     }
 
+    public abstract float getX();
+    public abstract float getY();
+
     //setters
 
     public void setAceleracion(float aceleracion) {

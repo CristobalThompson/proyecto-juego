@@ -11,20 +11,15 @@ public class NivelFacil extends Nivel {
     }
 
     @Override
-    public void generarEnemigos(NaveAbs jugador) {
-
+    public void crearAsteroidesIniciales(Random rand){
         int cantAsteroides = 5;
-        int velX = 100;
-        int velY = 100;
-
-        Random r = new Random();
-        for (int i = 0; i < cantAsteroides; i++) {
+        for (int i = 0; i < cantAsteroides; ++i){
             Ball2 bb = new Ball2(
-                r.nextInt((int)Gdx.graphics.getWidth()),
-                50 + r.nextInt((int)Gdx.graphics.getHeight() - 50),
-                20 + r.nextInt(10),
-                velX + r.nextInt(2),
-                velY + r.nextInt(2),
+                rand.nextInt(Gdx.graphics.getWidth()),
+                150 + rand.nextInt(Gdx.graphics.getHeight() - 200),
+                20 + rand.nextInt(10),
+                100 + rand.nextInt(2),
+                100 + rand.nextInt(2),
                 new Texture(Gdx.files.internal("aGreyMedium4.png"))
             );
             addBB(bb);
@@ -32,17 +27,27 @@ public class NivelFacil extends Nivel {
     }
 
     @Override
-    public void spawnCazaTIE(NaveAbs jugador, Texture tx){
-        Random rand = new Random();
-        int anchoNave = tx.getWidth();
-
+    public void solicitarSpawnEnemigo(NaveAbs jugador){
+        Texture tex = getTexturaCaza();
         int margen = 50;
+        int rangoX  = getAnchoPantalla() - (margen * 2) - tex.getWidth();
 
-        int rangoX = Gdx.graphics.getWidth() - (margen * 2) - anchoNave;
+        Random r = getRandom();
+        float x = r.nextInt(rangoX) + margen;
+        float y = getAltoPantalla() - 50;
 
-        float x = rand.nextInt(rangoX) + margen;
-        float y = Gdx.graphics.getHeight() - 50; // Cerca del borde superior
+        CazaTIE enemigo = new CazaTIE(tex, x, y, getVidasCaza(), this, jugador, getSpeedConfig());
 
-        agregarNave(new CazaTIE(tx, x, y, getVidasCaza(), this, jugador, getYSpeedCaza()));
+        agregarNave(enemigo);
+
     }
+
+    @Override
+    public boolean Evento(){
+        return false;
+    }
+
+    @Override
+    public void EventoEspecial(NaveAbs jugador){ }
+
 }

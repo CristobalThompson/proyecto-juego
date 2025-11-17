@@ -6,24 +6,23 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class NivelMedio extends Nivel{
 
+    private boolean eventoLluvia = false;
+
     public NivelMedio(){
         super(1.5f, 18, 4, 45f);
     }
 
     @Override
-    public void generarEnemigos(NaveAbs jugador) {
-        int cantAsteroides = 7;
-        int velX = 150;
-        int velY = 150;
-
-        Random r = new Random();
+    public void crearAsteroidesIniciales(Random rand){
+        // Cantidad intermedia de asteroides
+        int cantAsteroides = 8;
         for (int i = 0; i < cantAsteroides; i++) {
             Ball2 bb = new Ball2(
-                r.nextInt((int)Gdx.graphics.getWidth()),
-                50 + r.nextInt((int)Gdx.graphics.getHeight() - 50),
-                20 + r.nextInt(10),
-                velX + r.nextInt(4),
-                velY + r.nextInt(4),
+                rand.nextInt(getAnchoPantalla()),
+                150 + rand.nextInt(getAltoPantalla() - 200),
+                20 + rand.nextInt(10),
+                150 + rand.nextInt(30), // Velocidad media
+                150 + rand.nextInt(30),
                 new Texture(Gdx.files.internal("aGreyMedium4.png"))
             );
             addBB(bb);
@@ -31,17 +30,44 @@ public class NivelMedio extends Nivel{
     }
 
     @Override
-    public void spawnCazaTIE(NaveAbs jugador, Texture tx){
-        Random rand = new Random();
-        int anchoNave = tx.getWidth();
-
+    public void solicitarSpawnEnemigo(NaveAbs jugador){
+        Texture tex = getTexturaCaza();
         int margen = 50;
+        int minX = margen;
+        int maxX = getAnchoPantalla() - margen - tex.getWidth();
 
-        int rangoX = Gdx.graphics.getWidth() - (margen * 2) - anchoNave;
+        float jugadorX = jugador.getX();
 
-        float x = rand.nextInt(rangoX) + margen;
-        float y = Gdx.graphics.getHeight() - 50; // Cerca del borde superior
+        Random r = getRandom();
+        float desviacion = r.nextInt(300) - 150;
+        float targetX = jugadorX + desviacion;
 
-        agregarNave(new CazaTIE(tx, x, y, getVidasCaza(), this, jugador, getYSpeedCaza()));
+        if (targetX < minX) targetX = minX;
+        if (targetX > maxX) targetX = maxX;
+
+        float y = getAltoPantalla() - 50;
+
+        CazaTIE enemigo = new CazaTIE(tex, targetX, y, getVidasCaza(), this, jugador, getSpeedConfig());
+
+        agregarNave(enemigo);
+
+
+    }
+
+    @Override
+    public boolean Evento(){
+        if (!eventoLluvia && getNavesGeneradas() >= 10){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void EventoEspecial(NaveAbs jugador){
+        System.out.println("Eventito de lluvia de meteoritos");
+
+        crearAsteroidesIniciales(new Random());
+
+        eventoLluvia = true;
     }
 }
