@@ -28,6 +28,10 @@ public class PantallaGameOver implements Screen {
 		camera.update();
 		game.getBatch().setProjectionMatrix(camera.combined);
 
+        GestorJuego gestor = GestorJuego.getInstancia();
+        int scoreFinal = gestor.getPuntaje();
+        int rondaFinal = gestor.getRonda();
+
 		game.getBatch().begin();
 		game.getFont().draw(game.getBatch(), "Game Over !!! ", 120, 400,400,1,true);
 		game.getFont().draw(game.getBatch(), "Pincha en cualquier lado para reiniciar ...", 100, 300);
@@ -35,7 +39,12 @@ public class PantallaGameOver implements Screen {
 		game.getBatch().end();
 
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			Screen ss = new PantallaJuego(game,1,3,0, new ArrayList<Integer>(), 1);
+            gestor.reiniciar();
+
+            ArrayList<Integer> navesIniciales = new ArrayList<>();
+            navesIniciales.add(1);
+
+			Screen ss = new PantallaJuego(game,navesIniciales,1);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();
