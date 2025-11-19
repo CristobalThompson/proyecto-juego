@@ -9,9 +9,10 @@ public class NivelDificil extends Nivel{
 
     private boolean intentoBossRealizado = false;
     private boolean jefeSpawneado = false;
+    CruceroEstelar jefe = null;
 
     public NivelDificil(){
-        super(1.0f, 25, 5, 60f);
+        super(1.0f, 15, 4, 45f);
     }
 
     @Override
@@ -52,29 +53,39 @@ public class NivelDificil extends Nivel{
 
     @Override
     public boolean Evento(){
-        if (jefeSpawneado) return false;
+        if (jefeSpawneado || getNavesGeneradas() <= 12) return false;
 
-        if (!intentoBossRealizado && getNavesGeneradas() >= 25){
-            intentoBossRealizado = true;
+        return true; //borrar solo test
 
-            Random r = getRandom();
-            if (r.nextInt(100) < 40){
-                return true;
-            }
-        }
-
-        return false;
+//        if (jefeSpawneado) return false;
+//
+//        if (!intentoBossRealizado && getNavesGeneradas() >= 25){
+//            intentoBossRealizado = true;
+//
+//            Random r = getRandom();
+//            if (r.nextInt(100) < 40){
+//                return true;
+//            }
+//        }
+//
+//        return false;
     }
 
     @Override
     public void EventoEspecial(NaveAbs jugador){
+
         System.out.println("Jefesito en camino pe");
 
         Texture txCrucero = new Texture("MainShip3.png");
 
-        CruceroEstelar jefe = new CruceroEstelar(txCrucero, getAnchoPantalla()/2 - 100, getAltoPantalla() - 100, 20,
-                                                this, jugador, 10f);
+        jefe = new CruceroEstelar(txCrucero, getAnchoPantalla()/2 - 100, getAltoPantalla() - 100, 20,
+                                                this, jugador);
         agregarNave(jefe);
         jefeSpawneado = true;
+    }
+
+    @Override
+    public boolean condicion() {
+        return true;
     }
 }

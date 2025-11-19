@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.awt.*;
 import java.util.Random;
 
 
@@ -97,7 +98,7 @@ public class Nave4 extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-            int prob = r.nextInt() % 100;
+            int prob = r.nextInt(100);
 
             Disparo bala = null;
 

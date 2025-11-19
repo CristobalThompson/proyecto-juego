@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class NivelFacil extends Nivel {
 
     public NivelFacil(){
-        super(2.0f, 10, 3, 30f);
+        super(2.0f, 10, 2, 30f);
     }
 
     @Override
@@ -49,5 +49,10 @@ public class NivelFacil extends Nivel {
 
     @Override
     public void EventoEspecial(NaveAbs jugador){ }
+
+    @Override
+    public boolean condicion() {
+        return true;
+    }
 
 }

@@ -9,7 +9,7 @@ public class NivelMedio extends Nivel{
     private boolean eventoLluvia = false;
 
     public NivelMedio(){
-        super(1.5f, 18, 4, 45f);
+        super(1.5f, 12, 3, 45f);
     }
 
     @Override
@@ -69,5 +69,10 @@ public class NivelMedio extends Nivel{
         crearAsteroidesIniciales(new Random());
 
         eventoLluvia = true;
+    }
+
+    @Override
+    public boolean condicion() {
+        return eventoLluvia;
     }
 }

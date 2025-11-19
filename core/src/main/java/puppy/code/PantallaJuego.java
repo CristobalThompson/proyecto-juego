@@ -121,7 +121,7 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
         if (!nave.estaHerido()) {
-            score += nivelActual.update(dt, nave);
+            score += nivelActual.actualizarNivel(dt, nave);
             nivelActual.checkNaveCollision(nave);
         }
 
@@ -158,7 +158,7 @@ public class PantallaJuego implements Screen {
         return new ArrayList<>();
     }
 
-    public ArrayList<CazaTIE> getEnemigos(){
+    public ArrayList<Imperial> getEnemigos(){
         if (nivelActual != null){
             return nivelActual.getNaves();
         }

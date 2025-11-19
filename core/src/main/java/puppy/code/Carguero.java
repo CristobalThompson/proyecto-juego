@@ -125,8 +125,12 @@ public class Carguero extends NaveAbs{
             float bx = spr.getX() + spr.getWidth() * 0.5f - txBala.getWidth() * 0.5f;
             float by = spr.getY() + spr.getHeight() - 2f;
 
-            DoubleBullet bala = new DoubleBullet(bx, by,480f, txBala);
+            Disparo bala = new DoubleBullet(bx, by,480f, txBala);
+            Disparo bala2 = new DoubleBullet(bx, by,-480f, txBala);
+            Disparo balaPrincipal = new Bullet(bx, by, 0, 480f, txBala);
             juego.agregarBala(bala);
+            juego.agregarBala(balaPrincipal);
+            juego.agregarBala(bala2);
             soundBala.play();
         }
     }

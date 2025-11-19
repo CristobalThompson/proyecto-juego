@@ -2,6 +2,8 @@ package puppy.code;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.awt.*;
+
 public abstract class NaveAbs{
     private boolean destruida = false;
     private int vidas;

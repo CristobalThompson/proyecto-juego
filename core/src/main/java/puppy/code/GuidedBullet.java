@@ -13,7 +13,7 @@ public class GuidedBullet implements Disparo{
 
     private final Sprite spr;
     private final ArrayList<Ball2> objetivos;
-    private final ArrayList<CazaTIE> naves;
+    private final ArrayList<Imperial> naves;
     private final float speed;
     private final float steer;
     private float homingLeft;
@@ -22,7 +22,7 @@ public class GuidedBullet implements Disparo{
     private boolean destroyed = false;
 
     public GuidedBullet(float x, float y, float speed, float homingSeconds, float steerStrength,
-                        Texture tx, ArrayList<Ball2> objetivos, ArrayList<CazaTIE> enemigos) {
+                        Texture tx, ArrayList<Ball2> objetivos, ArrayList<Imperial> enemigos) {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
 
@@ -175,7 +175,7 @@ public class GuidedBullet implements Disparo{
         // Bucle 2: Revisar Naves Enemigas (naves)
         if (naves != null) {
             for (int i = 0; i < naves.size(); i++) {
-                CazaTIE n = naves.get(i);
+                Imperial n = naves.get(i);
                 Rectangle r = n.getArea(); // Asumiendo que CazaTIE tiene getArea()
 
                 float cx = r.x + r.width * 0.5f;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public abstract class Nivel {
     //colecciones
     private ArrayList<Ball2> asteroides = new ArrayList<>();
-    private ArrayList<CazaTIE> navesEnemigas = new ArrayList<>();
+    private ArrayList<Imperial> navesEnemigas = new ArrayList<>();
     private ArrayList<Disparo> balas = new ArrayList<>();
     private ArrayList<Disparo> balasEnemigas = new ArrayList<>();
 
@@ -62,25 +62,13 @@ public abstract class Nivel {
     private int actualizarFisicaYColisiones(float dt, NaveAbs jugador){
         int puntosGanados = 0;
 
-        // --- 1. LÓGICA DE SPAWN DE NAVES ---
-        // Solo generamos si aún quedan naves en la reserva
-        if (navesGeneradas < navesPorGenerar) {
-            spawnTimer += dt;
-
-            // Si pasó el tiempo, crea una nave nueva
-            if (spawnTimer >= spawnDelay) {
-                spawnTimer = 0; // Reinicia el contador
-                navesGeneradas++;
-                solicitarSpawnEnemigo(jugador);
-            }
-        }
         for (int i = 0; i < balas.size(); i++) {
             Disparo b = balas.get(i);
             b.update(dt);
 
 
             for (int j = 0; j < navesEnemigas.size(); j++) {
-                CazaTIE enemigo = navesEnemigas.get(j);
+                Imperial enemigo = navesEnemigas.get(j);
                 if (b.checkCollision(enemigo.getArea())) {
                     enemigo.recibirImpacto();
                     b.setDestroyed(true);
@@ -110,7 +98,7 @@ public abstract class Nivel {
 
         // --- 4. LÓGICA DE MOVIMIENTO DE ENEMIGOS (Modificada) ---
         for (int i = 0; i < navesEnemigas.size(); i++) {
-            CazaTIE enemigo = navesEnemigas.get(i);
+            Imperial enemigo = navesEnemigas.get(i);
             enemigo.update(dt);
 
             if (enemigo.getArea().getY() <= 0) {
@@ -158,10 +146,12 @@ public abstract class Nivel {
     public abstract void EventoEspecial(NaveAbs jugador);
 
     public void generarEnemigosRegulares(float dt, NaveAbs jugador){
-        spawnTimer += dt;
-        if (spawnTimer >= spawnDelay){
-            spawnTimer = 0;
-            solicitarSpawnEnemigo(jugador);
+        if (navesGeneradas < navesPorGenerar){
+            spawnTimer += dt;
+            if (spawnTimer >= spawnDelay){
+                spawnTimer = 0;
+                solicitarSpawnEnemigo(jugador);
+            }
         }
     }
 
@@ -178,100 +168,6 @@ public abstract class Nivel {
 
     public abstract void solicitarSpawnEnemigo(NaveAbs jugador);
 
-    public int update(float dt, NaveAbs jugador){
-        int puntosGanados = 0;
-
-        // --- 1. LÓGICA DE SPAWN DE NAVES ---
-        // Solo generamos si aún quedan naves en la reserva
-        if (navesGeneradas < navesPorGenerar) {
-            spawnTimer += dt;
-
-            // Si pasó el tiempo, crea una nave nueva
-            if (spawnTimer >= spawnDelay) {
-                spawnTimer = 0; // Reinicia el contador
-                navesGeneradas++;
-                solicitarSpawnEnemigo(jugador);
-            }
-        }
-        for (int i = 0; i < balas.size(); i++) {
-            Disparo b = balas.get(i);
-            b.update(dt);
-
-
-            for (int j = 0; j < navesEnemigas.size(); j++) {
-                CazaTIE enemigo = navesEnemigas.get(j);
-                if (b.checkCollision(enemigo.getArea())) {
-                    enemigo.recibirImpacto();
-                    b.setDestroyed(true);
-
-                    if (enemigo.estaDestruida()) {
-                        navesEnemigas.remove(j);
-                        j--;
-                        puntosGanados += 100;
-                        explosionSound.play();
-                    }
-                }
-            }
-
-            for (int j = 0; j < asteroides.size(); j++) {
-                if (b.checkCollision(asteroides.get(j))) {
-                    explosionSound.play();
-                    asteroides.remove(j);
-                    j--;
-                    puntosGanados += 50;
-                }
-            }
-            if (b.isDestroyed()) {
-                balas.remove(b);
-                i--;
-            }
-        }
-
-        // --- 4. LÓGICA DE MOVIMIENTO DE ENEMIGOS (Modificada) ---
-        for (int i = 0; i < navesEnemigas.size(); i++) {
-            CazaTIE enemigo = navesEnemigas.get(i);
-            enemigo.update(dt);
-
-            if (enemigo.getArea().getY() <= 0) {
-                jugadorDerrotado = true;
-                break;
-            }
-        }
-
-        // --- 5. LÓGICA DE ASTEROIDES (Igual que antes) ---
-        for (Ball2 ball : asteroides) {
-            ball.update(dt);
-
-            for (int i = 0; i < asteroides.size(); i++) {
-                Ball2 ball1 = asteroides.get(i);
-                for (int j = i + 1; j < asteroides.size(); j++) { // Optimización: j = i + 1
-                    Ball2 ball2 = asteroides.get(j);
-                    ball1.checkCollision(ball2);
-                }
-            }
-        }
-
-        for (int i = 0; i < balasEnemigas.size(); i++) {
-            Disparo b = balasEnemigas.get(i);
-
-            // ¡Esta es la línea que las mueve!
-            b.update(dt);
-
-            // Comprobar si la bala enemiga choca con el jugador
-            if (jugador.checkCollision(b)) {
-                b.setDestroyed(true);
-                // (La lógica de 'herido' ya debería estar en jugador.checkCollision)
-            }
-
-            if (b.isDestroyed()) {
-                balasEnemigas.remove(i);
-                i--;
-            }
-        }
-
-        return puntosGanados;
-    }
-
     public void draw(SpriteBatch batch){
         for (Disparo b : balas) {
             b.draw(batch);
@@ -279,7 +175,7 @@ public abstract class Nivel {
         for (Ball2 b : asteroides) {
             b.draw(batch);
         }
-        for (CazaTIE n : navesEnemigas){
+        for (Imperial n : navesEnemigas){
             n.draw(batch);
         }
         for (Disparo b : balasEnemigas){
@@ -308,11 +204,14 @@ public abstract class Nivel {
         return balasEnemigas.add(d);
     }
 
+
     public boolean isCompleted() {
-        return (navesGeneradas == navesPorGenerar) &&
+        return (navesGeneradas >= navesPorGenerar) &&
             navesEnemigas.isEmpty() &&
-            asteroides.isEmpty();
+            asteroides.isEmpty() && condicion();
     }
+
+    public abstract boolean condicion();
 
 
     public void dispose() {
@@ -323,7 +222,7 @@ public abstract class Nivel {
         asteroides.add(bb);
     }
 
-    public void agregarNave(CazaTIE nave){
+    public void agregarNave(Imperial nave){
         navesEnemigas.add(nave);
 
         ++navesGeneradas;
@@ -333,7 +232,7 @@ public abstract class Nivel {
         return asteroides;
     } //cambiar
 
-    public ArrayList<CazaTIE> getNaves(){
+    public ArrayList<Imperial> getNaves(){
         return navesEnemigas;
     } //cambiar
 
