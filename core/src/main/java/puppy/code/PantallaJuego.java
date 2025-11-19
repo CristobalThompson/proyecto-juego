@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static puppy.code.GestorJuego.getInstancia;
+
 
 public class PantallaJuego implements Screen {
 
@@ -37,7 +39,7 @@ public class PantallaJuego implements Screen {
         this.naveDesbloqueadas = navesDesbloqueadas;
         this.naveSeleccionada = naveSeleccionada;
 
-        GestorJuego gestor = GestorJuego.getInstancia();
+        GestorJuego gestor = getInstancia();
 
 		batch = game.getBatch();
 		camera = new OrthographicCamera();
@@ -103,7 +105,7 @@ public class PantallaJuego implements Screen {
     }
 
 	public void dibujaEncabezado() {
-        GestorJuego gestor = GestorJuego.getInstancia();
+        GestorJuego gestor = getInstancia();
 
         CharSequence str = nave.descripcion();
         str = str + " Ronda: " + gestor.getRonda();
@@ -121,10 +123,10 @@ public class PantallaJuego implements Screen {
         batch.begin();
         dibujaEncabezado();
 
-        GestorJuego gestor = GestorJuego.getInstancia();
+        GestorJuego gestor = getInstancia();
 
         if (!nave.estaHerido()) {
-            int puntosGanados = nivelActual.update(dt, nave);
+            int puntosGanados = nivelActual.actualizarNivel(dt, nave);
             gestor.sumarPuntos(puntosGanados);
             nivelActual.checkNaveCollision(nave);
         }
