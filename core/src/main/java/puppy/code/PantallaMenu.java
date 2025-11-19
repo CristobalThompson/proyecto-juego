@@ -35,11 +35,14 @@ public class PantallaMenu implements Screen {
 		game.getBatch().end();
 
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+            GestorJuego gestor = GestorJuego.getInstancia();
+            gestor.reiniciar();
+
             ArrayList<Integer> navesDesbloqueadas = new ArrayList<>();
             navesDesbloqueadas.add(1);
             int naveSeleccionada = 1;
 
-			Screen ss = new PantallaJuego(game,1,3,0, navesDesbloqueadas ,naveSeleccionada);
+			Screen ss = new PantallaJuego(game,navesDesbloqueadas,naveSeleccionada);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();

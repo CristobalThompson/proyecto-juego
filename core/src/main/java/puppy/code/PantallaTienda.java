@@ -14,9 +14,6 @@ public class PantallaTienda implements Screen{
     private OrthographicCamera camera;
     private SpriteBatch batch;
     private BitmapFont font;
-    private int score;
-    private int rondaActual;
-    private int vidasActuales;
 
     private ArrayList<Integer> navesDesbloqueadas;
     private int naveSeleccionada;
@@ -25,12 +22,9 @@ public class PantallaTienda implements Screen{
     private final int COSTO_MEJORA_NAVE = 2000;
 
 
-    public PantallaTienda(SpaceNavigation game, int rondaActual, int vidasActuales, int score,
+    public PantallaTienda(SpaceNavigation game,
                           ArrayList<Integer> navesDesbloqueadas, int naveSeleccionada) {
         this.game = game;
-        this.rondaActual = rondaActual;
-        this.vidasActuales = vidasActuales;
-        this.score = score;
         this.navesDesbloqueadas = navesDesbloqueadas;
         this.naveSeleccionada = naveSeleccionada;
 
@@ -48,10 +42,16 @@ public class PantallaTienda implements Screen{
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
+        GestorJuego gestor = GestorJuego.getInstancia();
+        int scoreActual = gestor.getPuntaje();
+        int rondaActual = gestor.getRonda();
+        int vidasActuales = gestor.getVidas();
+
         batch.begin();
         font.getData().setScale(2);
         font.draw(batch, "Base rebelde", 250, 600);
-        font.draw(batch, "Score Disponible: " + score, 300, 550);
+        //font.draw(batch, "Ronda Actual: " + rondaActual, 300, 580);
+        font.draw(batch, "Score Disponible: " + scoreActual, 300, 550);
         font.draw(batch, "Vidas Actuales: " + vidasActuales, 300, 500);
 
         font.getData().setScale(1.5f);
@@ -70,17 +70,19 @@ public class PantallaTienda implements Screen{
     }
 
     private void manejarInputs(){
+        GestorJuego gestor = GestorJuego.getInstancia();
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-            if (score >= COSTO_VIDA) {
-                score -= COSTO_VIDA;
-                vidasActuales++;
+            if (gestor.getPuntaje() >= COSTO_VIDA) {
+                gestor.gastarPuntos(COSTO_VIDA);
+                gestor.ganarVida();
                 // Opcional: sonido de compra
             }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-            if (!navesDesbloqueadas.contains(2) && score >= COSTO_MEJORA_NAVE){
-                score -= COSTO_MEJORA_NAVE;
+            if (!navesDesbloqueadas.contains(2) && gestor.getPuntaje() >= COSTO_MEJORA_NAVE){
+                gestor.gastarPuntos(COSTO_MEJORA_NAVE);
                 navesDesbloqueadas.add(2);
                 naveSeleccionada = 2;
             }
@@ -102,7 +104,10 @@ public class PantallaTienda implements Screen{
     }
 
     private void irAlSiguienteNivel() {
-        Screen ss = new PantallaJuego(game, rondaActual + 1, vidasActuales, score, navesDesbloqueadas, naveSeleccionada);
+        GestorJuego gestor = GestorJuego.getInstancia();
+        gestor.siguienteRonda();
+
+        Screen ss = new PantallaJuego(game, /*gestor.getRonda(), gestor.getVidas(), gestor.getPuntaje(),*/ navesDesbloqueadas, naveSeleccionada);
         ss.resize(1200, 800);
         game.setScreen(ss);
         dispose();

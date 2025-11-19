@@ -24,8 +24,6 @@ public class PantallaJuego implements Screen {
 	private SpriteBatch batch;
 	private Sound explosionSound;
 	private Music gameMusic;
-	private int score;
-	private int ronda;
     private ArrayList<Integer> naveDesbloqueadas;
     private int naveSeleccionada;
 
@@ -33,13 +31,13 @@ public class PantallaJuego implements Screen {
 	private Nivel nivelActual;
 
 
-	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score, ArrayList<Integer> navesDesbloqueadas,
+	public PantallaJuego(SpaceNavigation game, ArrayList<Integer> navesDesbloqueadas,
                          int naveSeleccionada) {
 		this.game = game;
-		this.ronda = ronda;
-		this.score = score;
         this.naveDesbloqueadas = navesDesbloqueadas;
         this.naveSeleccionada = naveSeleccionada;
+
+        GestorJuego gestor = GestorJuego.getInstancia();
 
 		batch = game.getBatch();
 		camera = new OrthographicCamera();
@@ -67,10 +65,10 @@ public class PantallaJuego implements Screen {
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
-        nave.setVidas(vidas);
+        nave.setVidas(gestor.getVidas());
 
         //Random r = new Random();
-	    initLevel(ronda, nave);
+        initLevel(gestor.getRonda(), nave);
 	}
 
     private void initLevel(int ronda, NaveAbs nave){
@@ -105,11 +103,13 @@ public class PantallaJuego implements Screen {
     }
 
 	public void dibujaEncabezado() {
+        GestorJuego gestor = GestorJuego.getInstancia();
+
         CharSequence str = nave.descripcion();
-        str = str + " Ronda: " + ronda;
+        str = str + " Ronda: " + gestor.getRonda();
 		game.getFont().getData().setScale(2f);
 		game.getFont().draw(batch, str, 10, 30);
-		game.getFont().draw(batch, "Score:"+this.score, Gdx.graphics.getWidth()-150, 30);
+		game.getFont().draw(batch, "Score:"+ gestor.getPuntaje(), Gdx.graphics.getWidth()-150, 30);
 		game.getFont().draw(batch, "HighScore:"+game.getHighScore(), Gdx.graphics.getWidth()/2-100, 30);
 	}
 	@Override
@@ -120,8 +120,12 @@ public class PantallaJuego implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         dibujaEncabezado();
+
+        GestorJuego gestor = GestorJuego.getInstancia();
+
         if (!nave.estaHerido()) {
-            score += nivelActual.actualizarNivel(dt, nave);
+            int puntosGanados = nivelActual.update(dt, nave);
+            gestor.sumarPuntos(puntosGanados);
             nivelActual.checkNaveCollision(nave);
         }
 
@@ -130,8 +134,8 @@ public class PantallaJuego implements Screen {
 
 
 	      if (nave.isDestruido() || nivelActual.isJugadorDerrotado()) {
-  			if (score > game.getHighScore())
-  				game.setHighScore(score);
+  			if (gestor.getPuntaje() > game.getHighScore())
+  				game.setHighScore(gestor.getPuntaje());
 	    	Screen ss = new PantallaGameOver(game);
   			ss.resize(1200, 800);
   			game.setScreen(ss);
@@ -140,7 +144,7 @@ public class PantallaJuego implements Screen {
 	      batch.end();
 	      //nivel completado
 	      if (nivelActual.isCompleted()) {
-              Screen tienda = new PantallaTienda(game, ronda, nave.getVidas(), score,
+              Screen tienda = new PantallaTienda(game, /*gestor.getRonda(), nave.getVidas(), gestor.getPuntaje(),*/
                   naveDesbloqueadas, naveSeleccionada);
 			game.setScreen(tienda);
 			dispose();
