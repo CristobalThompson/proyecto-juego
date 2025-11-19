@@ -27,7 +27,7 @@ public class Nave4 extends NaveAbs{
 
 
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
-        super(3,0f,0f,1800f,360f,3f);
+        super(0f,0f,1800f,360f,3f);
     	sonidoHerido = soundChoque;
     	this.soundBala = soundBala;
     	this.txBala = txBala;
@@ -168,7 +168,8 @@ public class Nave4 extends NaveAbs{
 
     @Override
     public CharSequence descripcion(){
-        return "Vidas: " + getVidas();
+        GestorJuego gestor = GestorJuego.getInstancia();
+        return "Vidas: " + gestor.getVidas();
     }
 
     @Override

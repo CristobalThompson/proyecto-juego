@@ -67,7 +67,7 @@ public class PantallaJuego implements Screen {
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
-        nave.setVidas(gestor.getVidas());
+        //nave.setVidas(gestor.getVidas());
 
         //Random r = new Random();
         initLevel(gestor.getRonda(), nave);

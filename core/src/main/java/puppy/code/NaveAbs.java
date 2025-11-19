@@ -6,7 +6,6 @@ import java.awt.*;
 
 public abstract class NaveAbs{
     private boolean destruida = false;
-    private int vidas;
     private float xVel;
     private float yVel;
     private float aceleracion;
@@ -14,8 +13,7 @@ public abstract class NaveAbs{
     private float rozamiento;
 
     //constructores
-    public NaveAbs(int cVidas, float velocidadX, float velocidadY, float ace, float velocidadM, float roce){
-        vidas = cVidas;
+    public NaveAbs(float velocidadX, float velocidadY, float ace, float velocidadM, float roce){
         xVel = velocidadX;
         yVel = velocidadY;
         aceleracion = ace;
@@ -40,8 +38,10 @@ public abstract class NaveAbs{
 
     //METODOS de interacción con los datos.
     public void herir(){
-        if (vidas > 0)vidas--;
-        if (vidas == 0) destruir();
+        GestorJuego gestor = GestorJuego.getInstancia();
+
+        if (gestor.getVidas() > 0) gestor.perderVida();
+        if (gestor.getVidas() == 0) destruir();
     }
 
     public void destruir(){
@@ -82,10 +82,6 @@ public abstract class NaveAbs{
         return destruida;
     }
 
-    public int getVidas(){
-        return vidas;
-    }
-
     public float getVelX(){
         return xVel;
     }
@@ -123,7 +119,5 @@ public abstract class NaveAbs{
         this.yVel = nuevaV;
     }
 
-    public void setVidas(int vidas){
-        this.vidas = vidas;
-    }
+    //public void setVidas(int vidas){this.vidas = vidas;}
 }

@@ -23,7 +23,7 @@ public class Carguero extends NaveAbs{
     private final int cargasEscudoMax = 2;
 
     public Carguero(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
-        super(5, 0f, 0f, 900f, 180, 6f);
+        super(0f, 0f, 900f, 180, 6f);
         sonidoHerido = soundChoque;
         this.soundBala = soundBala;
         this.txBala = txBala;
@@ -207,7 +207,8 @@ public class Carguero extends NaveAbs{
     }
     @Override
     public CharSequence descripcion(){
-        return "Vidas: "+ getVidas()+ " Escudos: " + cargasEscudo;
+        GestorJuego gestor = GestorJuego.getInstancia();
+        return "Vidas: "+ gestor.getVidas() + " Escudos: " + cargasEscudo;
     }
 
     @Override
