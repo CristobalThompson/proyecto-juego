@@ -15,8 +15,8 @@ public class CazaTIE extends Imperial{
     private float shootTimer = 0f;
 
 
-    public CazaTIE(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador, float ySpeed){
-        super(tx, x, y, vidas, ySpeed, nivel, jugador);
+    public CazaTIE(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador, float ySpeed, FabricaImperial fi){
+        super(tx, x, y, vidas, ySpeed, nivel, jugador, fi);
 
         this.shootCooldown = (float) (Math.random() * 3.0 + 1.0);
     }
@@ -60,8 +60,11 @@ public class CazaTIE extends Imperial{
     public void disparar(){
         Texture balatx = new Texture("Rocket2.png"); //textura a cambiar
 
-        Disparo bala = new Bullet(getSprite().getX() + getSprite().getWidth() / 2,
-            getSprite().getY(), 0, -200f, balatx);
+//        Disparo bala = new Bullet(getSprite().getX() + getSprite().getWidth() / 2,
+//            getSprite().getY(), 0, -200f, balatx);
+
+        Disparo bala = getFabrica().crearMunicion(getSprite().getX() + getSprite().getWidth() / 2,
+            getSprite().getY(), -200f, getJugador());
 
         getNivel().agregarBalaEnemiga(bala);
     }

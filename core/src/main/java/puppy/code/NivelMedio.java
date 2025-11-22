@@ -9,7 +9,7 @@ public class NivelMedio extends Nivel{
     private boolean eventoLluvia = false;
 
     public NivelMedio(){
-        super(1.5f, 12, 3, 35f);
+        super(1.5f, 12, 3, 35f, new FabricaBasicaImperial());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class NivelMedio extends Nivel{
 
         float y = getAltoPantalla() - 50;
 
-        CazaTIE enemigo = new CazaTIE(tex, targetX, y, getVidasCaza(), this, jugador, getSpeedConfig());
+        CazaTIE enemigo = new CazaTIE(tex, targetX, y, getVidasCaza(), this, jugador, getSpeedConfig(), getFabrica());
         agregarNave(enemigo);
     }
 

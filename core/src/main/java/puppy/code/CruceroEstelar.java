@@ -21,8 +21,8 @@ public class CruceroEstelar extends Imperial{
     private Texture txBala;
     private Texture txCaza;
 
-    public CruceroEstelar(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador){
-        super(tx, x, y, vidas, 0f, nivel, jugador);
+    public CruceroEstelar(Texture tx, float x, float y, int vidas, Nivel nivel, NaveAbs jugador, FabricaImperial fi){
+        super(tx, x, y, vidas, 0f, nivel, jugador, fi);
 
 
         getSprite().setScale(3f);
@@ -63,10 +63,10 @@ public class CruceroEstelar extends Imperial{
 
         Nivel actual = getNivel();
 
-        Imperial c1 = new CazaTIE(txCaza, 50, ySpawn, 2, actual, getJugador(), 30f);
+        Imperial c1 = new CazaTIE(txCaza, 50, ySpawn, 2, actual, getJugador(), 30f, new FabricaBasicaImperial());
 
         Imperial c2 = new CazaTIE(txCaza, Gdx.graphics.getWidth() - 100, ySpawn,
-            2, actual, getJugador(), 30f);
+            2, actual, getJugador(), 30f, new FabricaBasicaImperial());
 
         actual.agregarNave(c1);
         actual.agregarNave(c2);
@@ -120,7 +120,9 @@ public class CruceroEstelar extends Imperial{
         float x = rect.x + rect.width / 2;
         float y = rect.y;
 
-        Disparo bala = new GuidedBulletImperial(x, y, 250f, 2.0f, txBala, getJugador());
+        //Disparo bala = new GuidedBulletImperial(x, y, 250f, 2.0f, txBala, getJugador());
+
+        Disparo bala = getFabrica().crearMunicion(x, y, 250, getJugador());
         getNivel().agregarBalaEnemiga(bala);
     }
 }

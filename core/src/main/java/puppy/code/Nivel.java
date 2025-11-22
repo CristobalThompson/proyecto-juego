@@ -29,15 +29,18 @@ public abstract class Nivel {
     private int vidasCaza;
     private float ySpeedCaza;
 
+    private FabricaImperial fabricaNivel;
+
     //recursos
     Texture texturaCaza = new Texture("cazaTIE.png");
     private Sound explosionSound;
 
-    public Nivel(float spawnDelay, int navesPorGenerar, int vidasCaza, float ySpeedCaza){
+    public Nivel(float spawnDelay, int navesPorGenerar, int vidasCaza, float ySpeedCaza, FabricaImperial fn){
         this.spawnDelay = spawnDelay;
         this.navesPorGenerar = navesPorGenerar;
         this.vidasCaza = vidasCaza;
         this.ySpeedCaza = ySpeedCaza;
+        this.fabricaNivel = fn;
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
     }
@@ -257,5 +260,6 @@ public abstract class Nivel {
     public Random getRandom(){ return rand;}
     public int getNavesGeneradas(){ return navesGeneradas; }
     public int enemigosTotales(){return navesEnemigas.size();}
+    public FabricaImperial getFabrica(){ return fabricaNivel;}
 
 }

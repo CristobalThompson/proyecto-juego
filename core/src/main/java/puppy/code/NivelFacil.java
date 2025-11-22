@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class NivelFacil extends Nivel {
 
     public NivelFacil(){
-        super(2.0f, 10, 2, 30f);
+        super(2.0f, 10, 2, 30f, new FabricaBasicaImperial());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class NivelFacil extends Nivel {
 
         float y = getAltoPantalla() - 50;
 
-        CazaTIE enemigo = new CazaTIE(tex, x, y, getVidasCaza(), this, jugador, getSpeedConfig());
+        CazaTIE enemigo = new CazaTIE(tex, x, y, getVidasCaza(), this, jugador, getSpeedConfig(), getFabrica());
         agregarNave(enemigo);
 
     }

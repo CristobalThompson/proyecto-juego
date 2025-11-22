@@ -14,7 +14,7 @@ public class NivelDificil extends Nivel{
     CruceroEstelar jefe = null;
 
     public NivelDificil(){
-        super(1.0f, 15, 3, 40f);
+        super(1.0f, 16, 3, 40f, new FabricaBasicaImperial());
     }
 
     @Override
@@ -43,11 +43,16 @@ public class NivelDificil extends Nivel{
         float x1 = generarXAleatoriaSegura(anchoLogico);
         float x2 = generarXAleatoriaSegura(anchoLogico);
 
-        CazaTIE n1 = new CazaTIE(tex, x1, y, getVidasCaza(), this, jugador, getSpeedConfig());
-        CazaTIE n2 = new CazaTIE(tex, x2, y, getVidasCaza(), this, jugador, getSpeedConfig());
+        CazaTIE n1 = new CazaTIE(tex, x1, y, getVidasCaza(), this, jugador, getSpeedConfig(), getFabrica());
+        CazaTIE n2 = new CazaTIE(tex, x2, y, getVidasCaza(), this, jugador, getSpeedConfig(), getFabrica());
 
         agregarNave(n1);
         agregarNave(n2);
+
+        if (getRandom().nextInt(100) < 20){
+            CazaTIE n3 = new CazaTIE(tex, x1, y, getVidasCaza(), this, jugador, getSpeedConfig(), new FabricaEliteImperial());
+            agregarNave(n3);
+        }
     }
 
     @Override
@@ -77,7 +82,7 @@ public class NivelDificil extends Nivel{
         Texture txCrucero = new Texture("MainShip3.png");
 
         jefe = new CruceroEstelar(txCrucero, getAnchoPantalla()/2 - 100, getAltoPantalla() - 100, 50,
-                                                this, jugador);
+                                                this, jugador, new FabricaEliteImperial());
         agregarNave(jefe);
         jefeSpawneado = true;
     }
