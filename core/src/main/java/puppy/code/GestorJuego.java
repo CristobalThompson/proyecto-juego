@@ -8,6 +8,7 @@ public class GestorJuego {
     private int puntaje;
     private int ronda;
     private int vidas;
+    private int probBase;
 
     // Constructor privado
     private GestorJuego() {
@@ -23,11 +24,16 @@ public class GestorJuego {
         puntaje = 0;
         ronda = 1;
         vidas = 3;
+        probBase = 40;
     }
 
     public void sumarPuntos(int cantidad) {
         puntaje += cantidad;
     }
+
+    public void agregarProb(){ probBase += 20;}
+
+    public void reiniciarProb(){probBase = 40;}
 
     public void perderVida() {
         vidas--;
@@ -44,6 +50,8 @@ public class GestorJuego {
     public int getRonda() {
         return ronda;
     }
+
+    public int getProbBase(){return probBase;}
 
     public void siguienteRonda() {
         ronda++;

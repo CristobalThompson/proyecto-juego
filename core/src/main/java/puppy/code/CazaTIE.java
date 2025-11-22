@@ -27,37 +27,33 @@ public class CazaTIE extends Imperial{
         getSprite().translateY(-getySpeed() * dt);
 
         getSprite().translateX(xSpeed * moveDirection * dt);
-        moveTimer += dt;
 
-        if (moveTimer > 2.0f){
+        float x = getSprite().getX();
+        float anchoNave = getSprite().getWidth();
+        float anchoPantalla = com.badlogic.gdx.Gdx.graphics.getWidth();
+
+        if (x < 0) {
+            getSprite().setX(0);
+            moveDirection = 1;
+            moveTimer = 0;
+        }
+        else if (x + anchoNave > anchoPantalla) {
+            getSprite().setX(anchoPantalla - anchoNave);
+            moveDirection = -1;
+            moveTimer = 0;
+        }
+
+        moveTimer += dt;
+        if (moveTimer > 2.0f) {
             moveDirection *= -1;
             moveTimer = 0;
         }
 
         shootTimer += dt;
-        if (shootTimer >= shootCooldown){
+        if (shootTimer >= shootCooldown) {
             shootTimer = 0;
             disparar();
         }
-
-
-//        spr.translateX(speed * moveDirection * dt);
-//        moveTimer += dt;
-//
-//        //IA de movimiento cada 2 segunditos
-//        if (moveTimer > 3.0f){
-//            moveDirection *= -1;
-//            moveTimer = 0;
-//        }
-//
-//        spr.translateY(-ySpeed * dt); // 'y' negativa es hacia abajo
-//
-//        //IA de disparo
-//        shootTimer += dt;
-//        if (shootTimer >= shootCooldown){
-//            shootTimer = 0;
-//            disparar();
-//        }
     }
 
     @Override
@@ -65,7 +61,7 @@ public class CazaTIE extends Imperial{
         Texture balatx = new Texture("Rocket2.png"); //textura a cambiar
 
         Disparo bala = new Bullet(getSprite().getX() + getSprite().getWidth() / 2,
-            getSprite().getY(), 0, -250f, balatx);
+            getSprite().getY(), 0, -200f, balatx);
 
         getNivel().agregarBalaEnemiga(bala);
     }

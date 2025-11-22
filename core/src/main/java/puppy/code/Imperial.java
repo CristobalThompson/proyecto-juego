@@ -15,6 +15,7 @@ public abstract class Imperial {
     public Imperial(Texture tx, float x, float y, int vidas, float ySpeed, Nivel nivel, NaveAbs jugador){
         this.spr = new Sprite(tx);
         this.spr.setPosition(x, y);
+        spr.setBounds(x, y, 80, 60);
         this.vidas = vidas;
         this.ySpeed = ySpeed;
         this.nivel = nivel;

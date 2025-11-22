@@ -9,7 +9,7 @@ public class NivelMedio extends Nivel{
     private boolean eventoLluvia = false;
 
     public NivelMedio(){
-        super(1.5f, 12, 3, 45f);
+        super(1.5f, 12, 3, 35f);
     }
 
     @Override
@@ -34,7 +34,9 @@ public class NivelMedio extends Nivel{
         Texture tex = getTexturaCaza();
         int margen = 50;
         int minX = margen;
-        int maxX = getAnchoPantalla() - margen - tex.getWidth();
+
+        int anchoLogico = 80;
+        int maxX = getAnchoPantalla() - margen - anchoLogico;
 
         float jugadorX = jugador.getX();
 
@@ -48,10 +50,7 @@ public class NivelMedio extends Nivel{
         float y = getAltoPantalla() - 50;
 
         CazaTIE enemigo = new CazaTIE(tex, targetX, y, getVidasCaza(), this, jugador, getSpeedConfig());
-
         agregarNave(enemigo);
-
-
     }
 
     @Override

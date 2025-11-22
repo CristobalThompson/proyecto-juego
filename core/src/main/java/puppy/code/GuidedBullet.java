@@ -25,6 +25,7 @@ public class GuidedBullet implements Disparo{
                         Texture tx, ArrayList<Ball2> objetivos, ArrayList<Imperial> enemigos) {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
+        spr.setBounds(x, y, 15, 25);
 
         this.speed = speed;
         this.homingLeft = homingSeconds;

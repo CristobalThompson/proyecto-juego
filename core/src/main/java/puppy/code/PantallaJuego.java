@@ -55,13 +55,13 @@ public class PantallaJuego implements Screen {
         camera.setToOrtho(false, 1200, 800);
 
         if (naveSeleccionada == 1) {
-            nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+            nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("x-wing.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 	    else if (naveSeleccionada == 2){
-            nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+            nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("fantasma.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
@@ -126,8 +126,7 @@ public class PantallaJuego implements Screen {
         GestorJuego gestor = getInstancia();
 
         if (!nave.estaHerido()) {
-            int puntosGanados = nivelActual.actualizarNivel(dt, nave);
-            gestor.sumarPuntos(puntosGanados);
+            nivelActual.actualizarNivel(dt, nave);
             nivelActual.checkNaveCollision(nave);
         }
 

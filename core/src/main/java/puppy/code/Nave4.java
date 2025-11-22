@@ -32,10 +32,11 @@ public class Nave4 extends NaveAbs{
     	this.soundBala = soundBala;
     	this.txBala = txBala;
 
+
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
     	//spr.setOriginCenter();
-    	spr.setBounds(x, y, 45, 45);
+    	spr.setBounds(x, y, 75, 75);
 
     }
 

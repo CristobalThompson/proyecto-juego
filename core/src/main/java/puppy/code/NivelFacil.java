@@ -29,15 +29,17 @@ public class NivelFacil extends Nivel {
     @Override
     public void solicitarSpawnEnemigo(NaveAbs jugador){
         Texture tex = getTexturaCaza();
-        int margen = 50;
-        int rangoX  = getAnchoPantalla() - (margen * 2) - tex.getWidth();
 
-        Random r = getRandom();
-        float x = r.nextInt(rangoX) + margen;
+        // 1. Definimos un tamaño lógico razonable (ej. 80px) para la hitbox del juego
+        //    ignorando si la imagen HD mide 500px.
+        int anchoLogico = 80;
+
+        // 2. Pedimos la X al método del padre
+        float x = generarXAleatoriaSegura(anchoLogico);
+
         float y = getAltoPantalla() - 50;
 
         CazaTIE enemigo = new CazaTIE(tex, x, y, getVidasCaza(), this, jugador, getSpeedConfig());
-
         agregarNave(enemigo);
 
     }

@@ -16,6 +16,7 @@ public class Bullet implements Disparo{
 
     public Bullet(float x, float y, float xSpeed, float ySpeed, Texture tx) {
         spr = new Sprite(tx);
+        //spr.setSize(15f, 25f);
         spr.setPosition(x, y);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;

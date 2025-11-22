@@ -8,6 +8,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static puppy.code.GestorJuego.getInstancia;
+
 public abstract class Nivel {
     //colecciones
     private ArrayList<Ball2> asteroides = new ArrayList<>();
@@ -28,7 +30,7 @@ public abstract class Nivel {
     private float ySpeedCaza;
 
     //recursos
-    Texture texturaCaza = new Texture("MainShip3.png");
+    Texture texturaCaza = new Texture("cazaTIE.png");
     private Sound explosionSound;
 
     public Nivel(float spawnDelay, int navesPorGenerar, int vidasCaza, float ySpeedCaza){
@@ -42,10 +44,8 @@ public abstract class Nivel {
 
     //patron template method :v
 
-    public final int actualizarNivel(float dt, NaveAbs jugador){
-        int puntos = 0;
-
-        puntos += actualizarFisicaYColisiones(dt, jugador);
+    public final void actualizarNivel(float dt, NaveAbs jugador){
+        actualizarFisicaYColisiones(dt, jugador);
 
         if (Evento()){
             EventoEspecial(jugador);
@@ -53,13 +53,11 @@ public abstract class Nivel {
         else{
             generarEnemigosRegulares(dt, jugador);
         }
-
-        return puntos;
     }
 
 
 
-    private int actualizarFisicaYColisiones(float dt, NaveAbs jugador){
+    private void actualizarFisicaYColisiones(float dt, NaveAbs jugador){
         int puntosGanados = 0;
 
         for (int i = 0; i < balas.size(); i++) {
@@ -96,7 +94,6 @@ public abstract class Nivel {
             }
         }
 
-        // --- 4. LÓGICA DE MOVIMIENTO DE ENEMIGOS (Modificada) ---
         for (int i = 0; i < navesEnemigas.size(); i++) {
             Imperial enemigo = navesEnemigas.get(i);
             enemigo.update(dt);
@@ -107,13 +104,12 @@ public abstract class Nivel {
             }
         }
 
-        // --- 5. LÓGICA DE ASTEROIDES (Igual que antes) ---
         for (Ball2 ball : asteroides) {
             ball.update(dt);
 
             for (int i = 0; i < asteroides.size(); i++) {
                 Ball2 ball1 = asteroides.get(i);
-                for (int j = i + 1; j < asteroides.size(); j++) { // Optimización: j = i + 1
+                for (int j = i + 1; j < asteroides.size(); j++) {
                     Ball2 ball2 = asteroides.get(j);
                     ball1.checkCollision(ball2);
                 }
@@ -123,13 +119,10 @@ public abstract class Nivel {
         for (int i = 0; i < balasEnemigas.size(); i++) {
             Disparo b = balasEnemigas.get(i);
 
-            // ¡Esta es la línea que las mueve!
             b.update(dt);
 
-            // Comprobar si la bala enemiga choca con el jugador
             if (jugador.checkCollision(b)) {
                 b.setDestroyed(true);
-                // (La lógica de 'herido' ya debería estar en jugador.checkCollision)
             }
 
             if (b.isDestroyed()) {
@@ -138,7 +131,7 @@ public abstract class Nivel {
             }
         }
 
-        return puntosGanados;
+        getInstancia().sumarPuntos(puntosGanados);
     }
 
     public abstract boolean Evento();
@@ -228,6 +221,22 @@ public abstract class Nivel {
         ++navesGeneradas;
     }
 
+    public float generarXAleatoriaSegura(int anchoLogicoNave) {
+        int margen = 50;
+        int anchoPantalla = Gdx.graphics.getWidth();
+
+        // Calculamos el espacio libre real
+        int rangoDisponible = anchoPantalla - (margen * 2) - anchoLogicoNave;
+
+        // PROTECCIÓN: Si la nave es gigante o la pantalla muy chica
+        if (rangoDisponible <= 0) {
+            rangoDisponible = 1; // Evitamos error de Random
+        }
+
+        // Generamos la posición
+        return margen + rand.nextInt(rangoDisponible);
+    }
+
     public ArrayList<Ball2> getEnemigos() {
         return asteroides;
     } //cambiar
@@ -247,5 +256,6 @@ public abstract class Nivel {
     public int getAltoPantalla(){ return Gdx.graphics.getHeight();}
     public Random getRandom(){ return rand;}
     public int getNavesGeneradas(){ return navesGeneradas; }
+    public int enemigosTotales(){return navesEnemigas.size();}
 
 }
