@@ -21,18 +21,13 @@ public class PantallaJuego implements Screen {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Music gameMusic;
-    private ArrayList<Integer> naveDesbloqueadas;
-    private int naveSeleccionada;
 
 	private NaveAbs nave;
 	private Nivel nivelActual;
 
 
-	public PantallaJuego(SpaceNavigation game, ArrayList<Integer> navesDesbloqueadas,
-                         int naveSeleccionada) {
+	public PantallaJuego(SpaceNavigation game) {
 		this.game = game;
-        this.naveDesbloqueadas = navesDesbloqueadas;
-        this.naveSeleccionada = naveSeleccionada;
 
         GestorJuego gestor = getInstancia();
 
@@ -49,22 +44,21 @@ public class PantallaJuego implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1200, 800);
 
-        if (naveSeleccionada == 1) {
+        int seleccion = gestor.getNaveSeleccionada();
+
+        if (seleccion == 1) {
             nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("x-wing.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
-	    else if (naveSeleccionada == 2){
+	    else if (seleccion == 2){
             nave = new Carguero(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("fantasma.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         }
 
-        //nave.setVidas(gestor.getVidas());
-
-        //Random r = new Random();
         initLevel(gestor.getRonda(), nave);
 	}
 
@@ -140,8 +134,7 @@ public class PantallaJuego implements Screen {
 	      batch.end();
 	      //nivel completado
 	      if (nivelActual.isCompleted()) {
-              Screen tienda = new PantallaTienda(game, /*gestor.getRonda(), nave.getVidas(), gestor.getPuntaje(),*/
-                  naveDesbloqueadas, naveSeleccionada);
+              Screen tienda = new PantallaTienda(game);
 			game.setScreen(tienda);
 			dispose();
 		  }

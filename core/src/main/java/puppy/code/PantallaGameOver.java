@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
-
 
 public class PantallaGameOver implements Screen {
 
@@ -29,8 +27,6 @@ public class PantallaGameOver implements Screen {
 		game.getBatch().setProjectionMatrix(camera.combined);
 
         GestorJuego gestor = GestorJuego.getInstancia();
-        int scoreFinal = gestor.getPuntaje();
-        int rondaFinal = gestor.getRonda();
 
 		game.getBatch().begin();
 		game.getFont().draw(game.getBatch(), "Game Over !!! ", 120, 400,400,1,true);
@@ -41,10 +37,7 @@ public class PantallaGameOver implements Screen {
 		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             gestor.reiniciar();
 
-            ArrayList<Integer> navesIniciales = new ArrayList<>();
-            navesIniciales.add(1);
-
-			Screen ss = new PantallaJuego(game,navesIniciales,1);
+			Screen ss = new PantallaJuego(game);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();

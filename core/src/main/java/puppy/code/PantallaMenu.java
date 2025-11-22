@@ -6,8 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import java.util.ArrayList;
-
 
 public class PantallaMenu implements Screen {
 
@@ -38,11 +36,7 @@ public class PantallaMenu implements Screen {
             GestorJuego gestor = GestorJuego.getInstancia();
             gestor.reiniciar();
 
-            ArrayList<Integer> navesDesbloqueadas = new ArrayList<>();
-            navesDesbloqueadas.add(1);
-            int naveSeleccionada = 1;
-
-			Screen ss = new PantallaJuego(game,navesDesbloqueadas,naveSeleccionada);
+			Screen ss = new PantallaJuego(game);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();
