@@ -32,10 +32,11 @@ public class Nave4 extends NaveAbs{
     	this.soundBala = soundBala;
     	this.txBala = txBala;
 
+
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
     	//spr.setOriginCenter();
-    	spr.setBounds(x, y, 45, 45);
+    	spr.setBounds(x, y, 75, 75);
 
     }
 
@@ -104,7 +105,7 @@ public class Nave4 extends NaveAbs{
 
             if (prob <= 25 && prob > 0){
                 bala = new GuidedBullet(bx, by, 520f, 1f, 8f, txBala,
-                    juego.getMeteoritos(), juego.getEnemigos());
+                    juego.getNivel());
             }
             else{
                 bala = new Bullet(bx, by, 0f, 320f, txBala);

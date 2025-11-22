@@ -11,14 +11,18 @@ public abstract class Imperial {
 
     private Nivel nivel;
     private NaveAbs jugador;
+    private FabricaImperial fabrica;
 
-    public Imperial(Texture tx, float x, float y, int vidas, float ySpeed, Nivel nivel, NaveAbs jugador){
+    public Imperial(Texture tx, float x, float y, int vidas, float ySpeed, Nivel nivel, NaveAbs jugador,
+                    FabricaImperial fi){
         this.spr = new Sprite(tx);
         this.spr.setPosition(x, y);
+        spr.setBounds(x, y, 80, 60);
         this.vidas = vidas;
         this.ySpeed = ySpeed;
         this.nivel = nivel;
         this.jugador = jugador;
+        this.fabrica = fi;
     }
 
     public void draw(SpriteBatch batch) {
@@ -45,4 +49,5 @@ public abstract class Imperial {
     public float getySpeed(){ return ySpeed;}
     public NaveAbs getJugador(){ return jugador;}
     public Nivel getNivel(){ return nivel; }
+    public FabricaImperial getFabrica(){ return fabrica;}
 }
