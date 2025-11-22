@@ -30,7 +30,7 @@ public class PantallaJuego implements Screen {
     private int naveSeleccionada;
 
 	private NaveAbs nave;
-	private Nivel nivelActual;
+	private EstrategiaNivel nivelActual;
 
 
 	public PantallaJuego(SpaceNavigation game, ArrayList<Integer> navesDesbloqueadas,

@@ -8,7 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public abstract class Nivel {
+public abstract class Nivel implements EstrategiaNivel{
     //colecciones
     private ArrayList<Ball2> asteroides = new ArrayList<>();
     private ArrayList<Imperial> navesEnemigas = new ArrayList<>();
@@ -41,7 +41,7 @@ public abstract class Nivel {
     }
 
     //patron template method :v
-
+    @Override
     public final int actualizarNivel(float dt, NaveAbs jugador){
         int puntos = 0;
 
@@ -56,8 +56,6 @@ public abstract class Nivel {
 
         return puntos;
     }
-
-
 
     private int actualizarFisicaYColisiones(float dt, NaveAbs jugador){
         int puntosGanados = 0;
@@ -159,7 +157,6 @@ public abstract class Nivel {
     public final void generarEnemigos(NaveAbs jugador){
 
         crearAsteroidesIniciales(rand);
-
         spawnTimer = 0;
         navesGeneradas = 0;
     }
