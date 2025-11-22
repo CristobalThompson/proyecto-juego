@@ -17,14 +17,9 @@ import static puppy.code.GestorJuego.getInstancia;
 
 public class PantallaJuego implements Screen {
 
-    private boolean gameOver = false;
-    private boolean switching = false;
-    private float startGrace = 0.25f;
-
 	private SpaceNavigation game;
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Sound explosionSound;
 	private Music gameMusic;
     private ArrayList<Integer> naveDesbloqueadas;
     private int naveSeleccionada;
@@ -156,19 +151,7 @@ public class PantallaJuego implements Screen {
     	return nivelActual.agregarBala(bb);
     }
 
-    public ArrayList<Ball2> getMeteoritos(){
-        if (nivelActual != null) {
-            return nivelActual.getEnemigos();
-        }
-        return new ArrayList<>();
-    }
-
-    public ArrayList<Imperial> getEnemigos(){
-        if (nivelActual != null){
-            return nivelActual.getNaves();
-        }
-        return new ArrayList<>();
-    }
+    public Nivel getNivel(){ return nivelActual;}
 
 	@Override
 	public void show() {

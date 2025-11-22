@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import static puppy.code.GestorJuego.getInstancia;
+
 public class Carguero extends NaveAbs{
     private Sprite spr;
     private Sound sonidoHerido;
@@ -126,8 +128,9 @@ public class Carguero extends NaveAbs{
             float by = spr.getY() + spr.getHeight() - 2f;
 
             Disparo bala = new DoubleBullet(bx, by,480f, txBala);
-            Disparo bala2 = new DoubleBullet(bx, by,-480f, txBala);
+            Disparo bala2 = new DoubleBullet(bx, by - 100,-480f, txBala);
             Disparo balaPrincipal = new Bullet(bx, by, 0, 480f, txBala);
+
             juego.agregarBala(bala);
             juego.agregarBala(balaPrincipal);
             juego.agregarBala(bala2);
@@ -142,15 +145,15 @@ public class Carguero extends NaveAbs{
         float yVel = getVelY();
 
         if(!herido && b.getArea().overlaps(spr.getBoundingRectangle())){
-            // rebote
+
             if (xVel ==0) xVel += b.getXSpeed()/2;
             if (b.getXSpeed() ==0) b.setXSpeed(b.getXSpeed() + (int)xVel/2);
-            xVel = - xVel;
+            xVel =- xVel;
             b.setXSpeed(-b.getXSpeed());
 
             if (yVel ==0) yVel += b.getySpeed()/2;
             if (b.getySpeed() ==0) b.setySpeed(b.getySpeed() + (int)yVel/2);
-            yVel = - yVel;
+            yVel =- yVel;
             b.setySpeed(- b.getySpeed());
 
 
@@ -201,8 +204,7 @@ public class Carguero extends NaveAbs{
     }
     @Override
     public CharSequence descripcion(){
-        GestorJuego gestor = GestorJuego.getInstancia();
-        return "Vidas: "+ gestor.getVidas() + " Escudos: " + cargasEscudo;
+        return "Vidas: "+ getInstancia().getVidas() + " Escudos: " + cargasEscudo;
     }
 
     @Override

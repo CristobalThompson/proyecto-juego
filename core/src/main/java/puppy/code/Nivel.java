@@ -1,12 +1,13 @@
 package puppy.code;
 
-import java.lang.reflect.Array;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 import static puppy.code.GestorJuego.getInstancia;
 
@@ -240,18 +241,49 @@ public abstract class Nivel {
         return margen + rand.nextInt(rangoDisponible);
     }
 
-    public ArrayList<Ball2> getEnemigos() {
-        return asteroides;
-    } //cambiar
+    public Rectangle buscarObjetivoMasCercano(float xBala, float yBala){
+        Rectangle bestRect = null;
+        float bestD2 = Float.MAX_VALUE;
 
-    public ArrayList<Imperial> getNaves(){
-        return navesEnemigas;
-    } //cambiar
+        // 1. Buscar en Asteroides (Ball2)
+        for (Ball2 m : asteroides) { // Acceso directo porque estamos en Nivel
+            Rectangle r = m.getArea();
+            float cx = r.x + r.width * 0.5f;
+            float cy = r.y + r.height * 0.5f;
+
+            float dx = cx - xBala;
+            float dy = cy - yBala;
+            float d2 = dx * dx + dy * dy;
+
+            if (d2 < bestD2) {
+                bestD2 = d2;
+                bestRect = r;
+            }
+        }
+
+        // 2. Buscar en Naves Enemigas (Imperial)
+        for (Imperial n : navesEnemigas) { // Acceso directo
+            Rectangle r = n.getArea();
+            float cx = r.x + r.width * 0.5f;
+            float cy = r.y + r.height * 0.5f;
+
+            float dx = cx - xBala;
+            float dy = cy - yBala;
+            float d2 = dx * dx + dy * dy;
+
+            if (d2 < bestD2) {
+                bestD2 = d2;
+                bestRect = r;
+            }
+        }
+
+        return bestRect;
+    }
+
 
     public boolean isJugadorDerrotado(){
         return jugadorDerrotado;
     }
-
     public Texture getTexturaCaza(){ return texturaCaza;}
     public int getVidasCaza(){ return vidasCaza;}
     public float getSpeedConfig(){ return ySpeedCaza;}
