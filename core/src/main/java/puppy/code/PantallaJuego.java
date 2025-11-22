@@ -144,7 +144,7 @@ public class PantallaJuego implements Screen {
     	return nivelActual.agregarBala(bb);
     }
 
-    public Nivel getNivel(){ return nivelActual;}
+    public EstrategiaNivel getNivel(){ return nivelActual;}
 
 	@Override
 	public void show() {

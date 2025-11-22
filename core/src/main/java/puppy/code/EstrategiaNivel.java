@@ -1,11 +1,12 @@
 package puppy.code;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
 public interface EstrategiaNivel {
 
-    int actualizarNivel(float dt, NaveAbs jugador);
+    void actualizarNivel(float dt, NaveAbs jugador);
 
     void draw(SpriteBatch batch);
 
@@ -15,12 +16,11 @@ public interface EstrategiaNivel {
 
     boolean agregarBala(Disparo d);
 
-    ArrayList<Ball2> getEnemigos();      // meteoritos
-    ArrayList<Imperial> getNaves();      // naves enemigas
-
     boolean isJugadorDerrotado();
 
     boolean isCompleted();
 
     void dispose();
+
+    Rectangle buscarObjetivoMasCercano(float xBala, float yBala);
 }

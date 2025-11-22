@@ -1,6 +1,5 @@
 package puppy.code;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;

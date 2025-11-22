@@ -15,13 +15,13 @@ public class GuidedBullet implements Disparo{
     private final float speed;
     private final float steer;
     private float homingLeft;
-    private final Nivel nivel;
+    private final EstrategiaNivel nivel;
 
     private float vx, vy;
     private boolean destroyed = false;
 
     public GuidedBullet(float x, float y, float speed, float homingSeconds, float steerStrength,
-                        Texture tx, Nivel nivel) {
+                        Texture tx, EstrategiaNivel nivel) {
         spr = new Sprite(tx);
         spr.setPosition(x, y);
         spr.setBounds(x, y, 15, 25);
